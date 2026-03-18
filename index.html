@@ -1,0 +1,128 @@
+<script>
+        // ★設定1：動画開始から何秒後に購入ボタンを出すか？
+        const CTA_APPEAR_SECONDS = 15; // テスト用に15秒に設定
+
+        // ★設定2：サクラのチャットシナリオ（time: 動画開始からの秒数）
+        // 必ず time が小さい順（時系列順）に並べてください
+        const chatData =[
+            { time: 2,  name: "山田", text: "こんばんは！楽しみにしてました✨" },
+            { time: 5,  name: "T.K", text: "音声ばっちり聞こえてます！" },
+            { time: 8,  name: "鈴木", text: "もうすでに内容が濃くてびっくりしてます👀" },
+            { time: 11, name: "Yuki", text: "なるほど…メモ取りながら聞いてます！" },
+            { time: 14, name: "佐藤", text: "これ有料級の情報じゃないですか？ヤバいですね💦" },
+            // ↓ ここから購入ボタン（15秒）が出た後の反応 ↓
+            { time: 16, name: "田中", text: "え、安すぎませんか！？" },
+            { time: 17, name: "伊藤", text: "ずっと迷ってましたが、今買いました！よろしくお願いします！🔥" },
+            { time: 19, name: "中村", text: "私も参加しました！特典楽しみです！" },
+            { time: 22, name: "kenji", text: "枠埋まる前に滑り込みました👍" }
+        ];
+
+        const video = document.getElementById('webinar-video');
+        const overlay = document.getElementById('overlay');
+        const ctaContainer = document.getElementById('cta-container');
+        const chatContainer = document.getElementById('chat-messages');
+        
+        // チャットをどこまで表示したかを記憶する変数
+        let lastChatIndex = -1;
+
+        // 1. 開始時刻を取得
+        function getStartTime() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const startParam = urlParams.get('start');
+            if (startParam) return parseInt(startParam, 10);
+            
+            const localStart = localStorage.getItem('webinar_start_time');
+            if (localStart) return parseInt(localStart, 10);
+            
+            const now = Date.now();
+            localStorage.setItem('webinar_start_time', now.toString());
+            return now;
+        }
+
+        const startTime = getStartTime();
+
+        // 2. チャットを表示する処理
+        function renderChats(elapsedSeconds) {
+            let isAdded = false;
+            for (let i = lastChatIndex + 1; i < chatData.length; i++) {
+                const chat = chatData[i];
+                if (elapsedSeconds >= chat.time) {
+                    const chatEl = document.createElement('div');
+                    chatEl.className = 'chat-message';
+                    chatEl.innerHTML = `
+                        <div class="chat-name">${chat.name}</div>
+                        <div class="chat-text">${chat.text}</div>
+                    `;
+                    chatContainer.appendChild(chatEl);
+                    lastChatIndex = i;
+                    isAdded = true;
+                } else {
+                    break; 
+                }
+            }
+            if (isAdded) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+
+        // ★追加：動画がシーク(移動)中かどうかを判定するフラグ
+        let isSeeking = false;
+        video.addEventListener('seeking', () => { isSeeking = true; });
+        video.addEventListener('seeked', () => { isSeeking = false; });
+
+        // 3. 動画の時間とイベント（ボタン・チャット）を同期させる処理
+        function syncVideoTime() {
+            const now = Date.now();
+            const elapsedSeconds = (now - startTime) / 1000;
+
+            if (video.duration && elapsedSeconds >= video.duration) {
+                video.pause();
+                return;
+            }
+
+            // ★修正：シーク中でなく、時間のズレが【2秒以上】ある場合のみ動画の時間を合わせる
+            // これにより、再生がガクガクする現象を防ぎます
+            if (!isSeeking && Math.abs(video.currentTime - Math.max(0, elapsedSeconds)) > 2.0) {
+                video.currentTime = Math.max(0, elapsedSeconds);
+            }
+
+            // チャットを時間に合わせて表示する
+            renderChats(elapsedSeconds);
+
+            // 指定時間を過ぎたら購入ボタンを表示
+            if (elapsedSeconds >= CTA_APPEAR_SECONDS) {
+                ctaContainer.style.display = 'block';
+            }
+
+            requestAnimationFrame(syncVideoTime);
+        }
+
+        // 4. イベントリスナーと初期化処理
+        function startWebinar() {
+            if (window.isWebinarStarted) return; // 二重実行防止
+            window.isWebinarStarted = true;
+            
+            syncVideoTime();
+            video.play().catch(() => { console.log("自動再生ブロック"); });
+        }
+
+        // ★修正：キャッシュ対策（リロード時にイベントが発火しない問題を解決）
+        if (video.readyState >= 1) {
+            // すでに動画のメタデータが読み込み済みであればすぐに実行
+            startWebinar();
+        } else {
+            // まだ読み込まれていなければイベントを待ってから実行
+            video.addEventListener('loadedmetadata', startWebinar);
+        }
+
+        overlay.addEventListener('click', () => {
+            video.muted = false;
+            video.play();
+            overlay.style.display = 'none';
+        });
+
+        function resetWebinar() {
+            localStorage.removeItem('webinar_start_time');
+            window.location.reload();
+        }
+    </script>
