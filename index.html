@@ -1,42 +1,206 @@
-<script>
-        // ★設定1：動画開始から何秒後に購入ボタンを出すか？
-        const CTA_APPEAR_SECONDS = 15; // テスト用に15秒に設定
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【限定公開】特別ご祈祷ライブ配信</title>
+    <!-- Vimeoの操作に必要な公式システムを読み込み -->
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <style>
+        /* 基本スタイル */
+        body { margin: 0; background-color: #111; color: #fff; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        h1 { text-align: center; margin-top: 20px; font-size: 24px; color: #f3e5ab; }
 
-        // ★設定2：サクラのチャットシナリオ（time: 動画開始からの秒数）
-        // 必ず time が小さい順（時系列順）に並べてください
+        /* レイアウト */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        /* --- 左側：動画エリア --- */
+        .video-col {
+            flex: 1 1 650px;
+            position: relative;
+            background: #000;
+            aspect-ratio: 16 / 9;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* Vimeoをピッタリはめ込み、クリック（一時停止など）を防止 */
+        #vimeo-player {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* 視聴者の動画操作をブロック */
+        }
+
+        /* 音声ON＆待機画面のオーバーレイ */
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 10; cursor: pointer; backdrop-filter: blur(5px);
+        }
+        .play-btn {
+            background: #d4af37; color: #111; padding: 15px 40px; font-size: 24px;
+            font-weight: bold; border-radius: 50px; animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+
+        /* --- 右側：チャットエリア --- */
+        .chat-col {
+            flex: 0 0 320px;
+            background: #222;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            height: calc(650px * 9 / 16);
+            min-height: 400px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+        .chat-header {
+            background: #333; padding: 15px; text-align: center;
+            font-weight: bold; font-size: 16px; border-radius: 8px 8px 0 0; border-bottom: 1px solid #444;
+            color: #f3e5ab;
+        }
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 15px; display: flex;
+            flex-direction: column; gap: 12px;
+        }
+        .chat-message { animation: fadeInChat 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .chat-name { font-size: 12px; color: #aaa; margin-bottom: 4px; margin-left: 5px; }
+        .chat-text {
+            background: #444; padding: 10px 14px; border-radius: 18px;
+            display: inline-block; font-size: 14px; line-height: 1.4; color: #eee;
+        }
+        @keyframes fadeInChat {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 購入ボタンエリア --- */
+        .cta-wrapper { text-align: center; width: 100%; margin-top: 20px; }
+        #cta-container { display: none; animation: fadeIn 1s forwards; }
+        .cta-btn {
+            background: linear-gradient(to right, #d4af37, #f3e5ab, #d4af37); 
+            color: #333; 
+            padding: 20px 60px; font-size: 28px; font-weight: bold; text-decoration: none;
+            border-radius: 10px; display: inline-block; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <h1>✨ 特別ご祈祷 ライブ配信中 ✨</h1>
+
+    <div class="container">
+        <!-- 左：動画エリア -->
+        <div class="video-col">
+            <!-- いただいたVimeoのURLに、自動再生・消音・操作バー非表示の設定(&autoplay=1&muted=1&controls=0)を追加して埋め込み -->
+            <iframe 
+                id="vimeo-player" 
+                src="https://player.vimeo.com/video/154373242?h=afc9fbfe4e&autoplay=1&muted=1&controls=0" 
+                frameborder="0" 
+                allow="autoplay; fullscreen; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            
+            <div id="overlay">
+                <h2 id="overlay-message" style="text-align:center; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px #000;">
+                    <!-- カウントダウン文字が自動で入ります -->
+                </h2>
+                <div id="play-btn" class="play-btn" style="display: none;">ここをタップして音声ON🔊</div>
+            </div>
+        </div>
+
+        <!-- 右：チャットエリア -->
+        <div class="chat-col">
+            <div class="chat-header">💬 ライブチャット</div>
+            <div class="chat-messages" id="chat-messages"></div>
+        </div>
+
+        <!-- 下：購入ボタン -->
+        <div class="cta-wrapper">
+            <div id="cta-container">
+                <!-- 【本番用】ここの href を決済ページのURLに差し替えてください -->
+                <a href="#" class="cta-btn">✨ 特別ご祈祷枠（限定）に申し込む ✨</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // ★設定1：毎日の「配信開始時刻」
+        // ==========================================
+        const START_HOUR = 19;   // 19時
+        const START_MINUTE = 10; // 10分
+
+        // ==========================================
+        // ★設定2：動画開始から「何秒後」に購入ボタンを出すか？
+        // ==========================================
+        const CTA_APPEAR_SECONDS = 15; // テスト用（本番はセールス開始の秒数に変更）
+
+        // ==========================================
+        // ★設定3：サクラのチャットシナリオ
+        // ==========================================
         const chatData =[
-            { time: 2,  name: "山田", text: "こんばんは！楽しみにしてました✨" },
-            { time: 5,  name: "T.K", text: "音声ばっちり聞こえてます！" },
-            { time: 8,  name: "鈴木", text: "もうすでに内容が濃くてびっくりしてます👀" },
-            { time: 11, name: "Yuki", text: "なるほど…メモ取りながら聞いてます！" },
-            { time: 14, name: "佐藤", text: "これ有料級の情報じゃないですか？ヤバいですね💦" },
-            // ↓ ここから購入ボタン（15秒）が出た後の反応 ↓
-            { time: 16, name: "田中", text: "え、安すぎませんか！？" },
-            { time: 17, name: "伊藤", text: "ずっと迷ってましたが、今買いました！よろしくお願いします！🔥" },
-            { time: 19, name: "中村", text: "私も参加しました！特典楽しみです！" },
-            { time: 22, name: "kenji", text: "枠埋まる前に滑り込みました👍" }
+            { time: 2,  name: "恵子", text: "こんばんは。先生、今日もよろしくお願いします✨" },
+            { time: 5,  name: "Y.K", text: "音声聞こえています。すでに画面からすごいエネルギーを感じます！" },
+            { time: 8,  name: "美穂", text: "最近ついてないことが多かったので、今日のお話をずっと楽しみにしていました🥲" },
+            { time: 11, name: "さゆり", text: "先日の遠隔ヒーリングのおかげで、本当に臨時収入がありました！今日も期待してます！" },
+            { time: 14, name: "洋子", text: "すごい…そんな特別なご祈祷をしていただけるんですね😭" },
+            { time: 16, name: "真由美", text: "えっ、このお初穂料（お値段）でいいんですか…！？" },
+            { time: 17, name: "A.I", text: "ずっと悩んでいましたが、これもご縁だと思い申し込みました！先生、よろしくお願いいたします🙏" },
+            { time: 19, name: "和子", text: "私も今申し込み完了しました！なんだかホッとして涙が出てきました。" },
+            { time: 22, name: "ひろみ", text: "限定枠、なんとか入れました！これからの自分の変化が楽しみです🌸" }
         ];
 
-        const video = document.getElementById('webinar-video');
+        // --- Vimeoプレイヤーの初期化設定 ---
+        const iframe = document.getElementById('vimeo-player');
+        const player = new Vimeo.Player(iframe);
+
         const overlay = document.getElementById('overlay');
+        const overlayMessage = document.getElementById('overlay-message');
+        const playBtn = document.getElementById('play-btn');
         const ctaContainer = document.getElementById('cta-container');
         const chatContainer = document.getElementById('chat-messages');
         
-        // チャットをどこまで表示したかを記憶する変数
         let lastChatIndex = -1;
+        let isUserInteracted = false; 
+        
+        // Vimeoの動画状態を管理する変数
+        let videoDuration = 0;
+        let currentVideoTime = 0;
+        let isSeeking = false;
 
-        // 1. 開始時刻を取得
+        // 動画の合計時間を取得
+        player.getDuration().then(function(duration) {
+            videoDuration = duration;
+        });
+
+        // 動画の現在時間を常に記録
+        player.on('timeupdate', function(data) {
+            currentVideoTime = data.seconds;
+        });
+
+        // 1. 今日の配信開始時刻を取得
         function getStartTime() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const startParam = urlParams.get('start');
-            if (startParam) return parseInt(startParam, 10);
+            const now = new Date();
+            let start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), START_HOUR, START_MINUTE, 0);
             
-            const localStart = localStorage.getItem('webinar_start_time');
-            if (localStart) return parseInt(localStart, 10);
-            
-            const now = Date.now();
-            localStorage.setItem('webinar_start_time', now.toString());
-            return now;
+            // 配信開始から「3時間以上」過ぎている場合は、翌日の配信時刻にする
+            if (now.getTime() - start.getTime() > 3 * 60 * 60 * 1000) {
+                start.setDate(start.getDate() + 1);
+            }
+            return start.getTime();
         }
 
         const startTime = getStartTime();
@@ -49,10 +213,7 @@
                 if (elapsedSeconds >= chat.time) {
                     const chatEl = document.createElement('div');
                     chatEl.className = 'chat-message';
-                    chatEl.innerHTML = `
-                        <div class="chat-name">${chat.name}</div>
-                        <div class="chat-text">${chat.text}</div>
-                    `;
+                    chatEl.innerHTML = `<div class="chat-name">${chat.name}</div><div class="chat-text">${chat.text}</div>`;
                     chatContainer.appendChild(chatEl);
                     lastChatIndex = i;
                     isAdded = true;
@@ -65,31 +226,58 @@
             }
         }
 
-        // ★追加：動画がシーク(移動)中かどうかを判定するフラグ
-        let isSeeking = false;
-        video.addEventListener('seeking', () => { isSeeking = true; });
-        video.addEventListener('seeked', () => { isSeeking = false; });
-
-        // 3. 動画の時間とイベント（ボタン・チャット）を同期させる処理
+        // 3. 動画の時間とイベントを同期させるメイン処理
         function syncVideoTime() {
             const now = Date.now();
             const elapsedSeconds = (now - startTime) / 1000;
 
-            if (video.duration && elapsedSeconds >= video.duration) {
-                video.pause();
+            // ===== ① 配信開始前（カウントダウン） =====
+            if (elapsedSeconds < 0) {
+                const remainTotalSeconds = Math.abs(Math.floor(elapsedSeconds));
+                const h = Math.floor(remainTotalSeconds / 3600);
+                const m = Math.floor((remainTotalSeconds % 3600) / 60);
+                const s = remainTotalSeconds % 60;
+                
+                overlay.style.display = 'flex';
+                let timeText = h > 0 ? `${h}時間 ${m}分 ${s}秒` : `${m}分 ${s}秒`;
+                
+                overlayMessage.innerHTML = `⏳ 配信開始までお待ちください<br><br><span style="font-size: 20px;">開始まで あと ${timeText}</span>`;
+                playBtn.style.display = 'none'; 
+                
+                requestAnimationFrame(syncVideoTime);
                 return;
             }
 
-            // ★修正：シーク中でなく、時間のズレが【2秒以上】ある場合のみ動画の時間を合わせる
-            // これにより、再生がガクガクする現象を防ぎます
-            if (!isSeeking && Math.abs(video.currentTime - Math.max(0, elapsedSeconds)) > 2.0) {
-                video.currentTime = Math.max(0, elapsedSeconds);
+            // ===== ② 配信終了後 =====
+            if (videoDuration > 0 && elapsedSeconds >= videoDuration) {
+                player.pause();
+                if (!isUserInteracted) {
+                    overlay.style.display = 'flex';
+                    overlayMessage.innerHTML = '本日のご祈祷配信は終了いたしました。<br>またのご縁をお待ちしております。';
+                    playBtn.style.display = 'none';
+                }
+                return;
             }
 
-            // チャットを時間に合わせて表示する
+            // ===== ③ 配信中（時間同期処理） =====
+            if (!isUserInteracted) {
+                overlay.style.display = 'flex';
+                overlayMessage.innerHTML = '▶ 配信が開始されています';
+                playBtn.style.display = 'inline-block';
+            }
+
+            // Vimeo APIを使った時間調整（ズレが2秒以上ある場合のみ）
+            if (!isSeeking && Math.abs(currentVideoTime - Math.max(0, elapsedSeconds)) > 2.0) {
+                isSeeking = true;
+                player.setCurrentTime(Math.max(0, elapsedSeconds)).then(function() {
+                    isSeeking = false;
+                }).catch(function() {
+                    isSeeking = false;
+                });
+            }
+
             renderChats(elapsedSeconds);
 
-            // 指定時間を過ぎたら購入ボタンを表示
             if (elapsedSeconds >= CTA_APPEAR_SECONDS) {
                 ctaContainer.style.display = 'block';
             }
@@ -97,32 +285,24 @@
             requestAnimationFrame(syncVideoTime);
         }
 
-        // 4. イベントリスナーと初期化処理
-        function startWebinar() {
-            if (window.isWebinarStarted) return; // 二重実行防止
-            window.isWebinarStarted = true;
-            
-            syncVideoTime();
-            video.play().catch(() => { console.log("自動再生ブロック"); });
-        }
+        // ループ処理開始
+        syncVideoTime();
 
-        // ★修正：キャッシュ対策（リロード時にイベントが発火しない問題を解決）
-        if (video.readyState >= 1) {
-            // すでに動画のメタデータが読み込み済みであればすぐに実行
-            startWebinar();
-        } else {
-            // まだ読み込まれていなければイベントを待ってから実行
-            video.addEventListener('loadedmetadata', startWebinar);
-        }
-
+        // 4. ユーザーが「音声ON」をタップした時の処理
         overlay.addEventListener('click', () => {
-            video.muted = false;
-            video.play();
+            // カウントダウン中、または配信終了後は反応させない
+            if ((Date.now() - startTime) < 0) return;
+            if (videoDuration > 0 && ((Date.now() - startTime) / 1000) >= videoDuration) return;
+
+            isUserInteracted = true;
+            // Vimeoの音声をONにして再生
+            player.setMuted(false);
+            player.setVolume(1);
+            player.play();
+            
             overlay.style.display = 'none';
         });
 
-        function resetWebinar() {
-            localStorage.removeItem('webinar_start_time');
-            window.location.reload();
-        }
     </script>
+</body>
+</html>
