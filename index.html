@@ -373,6 +373,123 @@
         .cta-btn:active { opacity: 0.85; transform: scale(0.99); }
 
         /* =============================
+           名前入力モーダル
+        ============================= */
+        #name-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: radial-gradient(ellipse at center, rgba(10,8,6,0.7) 0%, rgba(10,8,6,0.97) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        .name-modal-inner {
+            width: 100%;
+            max-width: 360px;
+            background: var(--dark-card);
+            border: 1px solid rgba(201,168,76,0.25);
+            border-radius: 6px;
+            padding: 36px 28px 32px;
+            text-align: center;
+            position: relative;
+            animation: modalIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)    scale(1); }
+        }
+
+        /* 上部ゴールドライン */
+        .name-modal-inner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            border-radius: 6px 6px 0 0;
+        }
+
+        .modal-icon {
+            font-size: 36px;
+            margin-bottom: 14px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .modal-title {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .modal-lead {
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: var(--gold-pale);
+            line-height: 1.8;
+            margin-bottom: 6px;
+        }
+
+        .modal-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        #name-input {
+            width: 100%;
+            background: var(--dark-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 4px;
+            color: var(--text-main);
+            font-family: 'Noto Serif JP', serif;
+            font-size: 16px; /* iOSズーム防止 */
+            padding: 13px 16px;
+            outline: none;
+            text-align: center;
+            letter-spacing: 0.2em;
+            transition: border-color 0.2s;
+            margin-bottom: 14px;
+        }
+        #name-input:focus { border-color: rgba(201,168,76,0.5); }
+        #name-input::placeholder { color: var(--text-muted); font-size: 13px; letter-spacing: 0.1em; }
+
+        #name-submit {
+            width: 100%;
+            background: linear-gradient(90deg, #9a7020, var(--gold-light), var(--gold), var(--gold-light), #9a7020);
+            background-size: 300% 100%;
+            border: none;
+            color: #0f0900;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            padding: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-height: 52px;
+            animation: goldFlow 3.5s ease-in-out infinite;
+            transition: opacity 0.2s;
+        }
+        #name-submit:active { opacity: 0.8; }
+
+        .modal-note {
+            margin-top: 14px;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            line-height: 1.8;
+        }
+
+        /* =============================
            PC時のレイアウト調整
         ============================= */
         @media (min-width: 700px) {
@@ -412,6 +529,19 @@
     </style>
 </head>
 <body>
+
+    <!-- 名前入力モーダル -->
+    <div id="name-modal">
+        <div class="name-modal-inner">
+            <div class="modal-icon">🪷</div>
+            <p class="modal-title">Welcome</p>
+            <p class="modal-lead">お名前を入力してください</p>
+            <p class="modal-sub">チャットに表示されるお名前です。<br>ニックネームでも構いません。</p>
+            <input type="text" id="name-input" placeholder="例）山田　/ ハナコ" maxlength="20" autocomplete="off">
+            <button id="name-submit">✦ &nbsp; ライブ配信に参加する &nbsp; ✦</button>
+            <p class="modal-note">※ 入力した名前はこのページのみで使用されます</p>
+        </div>
+    </div>
 
     <!-- ヘッダー -->
     <header class="site-header">
@@ -489,7 +619,7 @@
          *  例) 夜8時30分スタート → START_HOUR = 20, START_MINUTE = 30
          * ============================================================ */
         const START_HOUR   = 21;   // ← ここを変える（0〜23）
-        const START_MINUTE = 28;    // ← ここを変える（0〜59）
+        const START_MINUTE = 34;    // ← ここを変える（0〜59）
         /* ============================================================ */
 
         const CTA_APPEAR_SECONDS = 120; // 購入ボタンが出るまでの秒数（2分=120）
@@ -528,6 +658,36 @@
         const chatSubmitBtn = document.getElementById('chat-submit');
         const viewerCountEl = document.getElementById('viewer-count');
         const chatStatus    = document.getElementById('chat-status');
+
+        // 名前モーダル
+        const nameModal     = document.getElementById('name-modal');
+        const nameInput     = document.getElementById('name-input');
+        const nameSubmitBtn = document.getElementById('name-submit');
+
+        let userName = 'あなた'; // デフォルト（モーダルで上書きされる）
+
+        function submitName() {
+            const val = nameInput.value.trim();
+            if (!val) {
+                nameInput.style.borderColor = 'rgba(224,85,85,0.6)';
+                nameInput.placeholder = '名前を入力してください';
+                nameInput.focus();
+                return;
+            }
+            userName = val;
+            nameModal.style.animation = 'modalOut 0.3s ease forwards';
+            setTimeout(() => nameModal.style.display = 'none', 300);
+        }
+
+        // モーダルのアニメーション（閉じる）
+        const modalStyle = document.createElement('style');
+        modalStyle.textContent = `@keyframes modalOut { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(0.96)} }`;
+        document.head.appendChild(modalStyle);
+
+        nameSubmitBtn.addEventListener('click', submitName);
+        nameInput.addEventListener('keypress', e => { if (e.key === 'Enter') submitName(); });
+        // 入力したら赤枠リセット
+        nameInput.addEventListener('input', () => nameInput.style.borderColor = '');
 
         let player           = null;
         let playerReady      = false;
@@ -583,7 +743,7 @@
         function sendMyChat() {
             const text = chatInput.value.trim();
             if (!text) return;
-            appendChat('あなた', text, true);
+            appendChat(userName, text, true);
             chatInput.value = '';
         }
         chatSubmitBtn.addEventListener('click', sendMyChat);
