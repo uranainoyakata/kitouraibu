@@ -2,215 +2,181 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>【限定公開】特別ご祈祷ライブ配信</title>
     <script src="https://player.vimeo.com/api/player.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #c9a84c;
-            --gold-light: #f0d080;
-            --gold-pale: #f7ebb8;
-            --dark-bg: #0a0806;
-            --dark-card: #120f0a;
-            --dark-mid: #1c1710;
-            --dark-border: #2e2618;
-            --text-main: #ede0c4;
-            --text-muted: #8a7a5e;
-            --red-live: #e05555;
+            --gold:        #c9a84c;
+            --gold-light:  #f0d080;
+            --gold-pale:   #f7ebb8;
+            --dark-bg:     #0a0806;
+            --dark-card:   #120f0a;
+            --dark-mid:    #1a1510;
+            --dark-border: #2a2218;
+            --text-main:   #ede0c4;
+            --text-muted:  #7a6a4e;
+            --red-live:    #e05555;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-        body {
-            background-color: var(--dark-bg);
+        html, body {
+            background: var(--dark-bg);
             color: var(--text-main);
             font-family: 'Noto Serif JP', serif;
             min-height: 100vh;
             overflow-x: hidden;
+            /* スマホで引っ張りすぎ防止 */
+            overscroll-behavior-y: contain;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 10% 30%, rgba(201,168,76,0.04) 0%, transparent 50%),
-                radial-gradient(ellipse 40% 40% at 90% 70%, rgba(201,168,76,0.04) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* === ヘッダー === */
+        /* =============================
+           ヘッダー（コンパクト）
+        ============================= */
         .site-header {
             position: relative;
             z-index: 10;
             text-align: center;
-            padding: 40px 20px 24px;
+            padding: 18px 16px 14px;
             border-bottom: 1px solid var(--dark-border);
+            background: linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
         }
 
-        .header-kamon {
-            font-size: 26px;
-            letter-spacing: 0.4em;
-            color: var(--gold);
-            margin-bottom: 12px;
-            animation: shimmer 3s ease-in-out infinite;
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 6px;
         }
 
-        @keyframes shimmer {
-            0%, 100% { opacity: 0.65; }
-            50% { opacity: 1; }
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(224,85,85,0.12);
+            border: 1px solid rgba(224,85,85,0.4);
+            color: #f08080;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            padding: 3px 10px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .live-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--red-live);
+            animation: blink 1.2s ease-in-out infinite;
+        }
+        @keyframes blink {
+            0%,100% { opacity:1; } 50% { opacity:0.1; }
         }
 
         .site-header h1 {
-            font-family: 'Noto Serif JP', serif;
+            font-size: 15px;
             font-weight: 300;
-            font-size: clamp(18px, 3vw, 26px);
-            letter-spacing: 0.3em;
+            letter-spacing: 0.25em;
             color: var(--gold-pale);
-            line-height: 1.8;
+            line-height: 1.6;
         }
-
         .site-header h1 em {
             font-style: normal;
             color: var(--gold-light);
             font-weight: 500;
         }
 
-        .live-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            margin-top: 16px;
-            background: rgba(224,85,85,0.1);
-            border: 1px solid rgba(224,85,85,0.35);
-            color: #f08080;
-            font-size: 11px;
-            letter-spacing: 0.2em;
-            padding: 5px 18px;
-            border-radius: 2px;
-        }
-
-        .live-dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            background: var(--red-live);
-            animation: blink 1.2s ease-in-out infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.15; }
-        }
-
-        /* === メインレイアウト === */
-        .main-layout {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 32px 20px 60px;
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 24px;
-        }
-
-        /* === 動画 === */
-        .video-col { grid-column: 1; grid-row: 1; }
-
-        .section-label {
+        /* =============================
+           動画上の案内バナー
+        ============================= */
+        .info-banner {
+            background: linear-gradient(90deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06), rgba(201,168,76,0.12));
+            border-bottom: 1px solid rgba(201,168,76,0.2);
+            padding: 8px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: 10px;
-            letter-spacing: 0.3em;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 11px;
+            letter-spacing: 0.08em;
             color: var(--text-muted);
-            text-transform: uppercase;
         }
-        .section-label::before,
-        .section-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
+        .info-banner .banner-title {
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
         }
-        .section-label::before { background: linear-gradient(to right, transparent, var(--dark-border)); }
-        .section-label::after  { background: linear-gradient(to left,  transparent, var(--dark-border)); }
+        .viewer-count {
+            font-size: 11px;
+            color: var(--gold);
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
 
-        .video-frame-outer {
+        /* =============================
+           動画エリア（全幅・スマホ最優先）
+        ============================= */
+        .video-wrap {
             position: relative;
-            border: 1px solid var(--dark-border);
-            border-radius: 3px;
-            overflow: hidden;
-            box-shadow:
-                0 0 0 1px rgba(201,168,76,0.08),
-                0 30px 80px rgba(0,0,0,0.8);
-        }
-
-        .video-frame-outer::before,
-        .video-frame-outer::after {
-            content: '';
-            position: absolute;
-            width: 18px; height: 18px;
-            border-color: rgba(201,168,76,0.5);
-            border-style: solid;
-            z-index: 5;
-            pointer-events: none;
-        }
-        .video-frame-outer::before { top: 7px; left: 7px; border-width: 1px 0 0 1px; }
-        .video-frame-outer::after  { bottom: 7px; right: 7px; border-width: 0 1px 1px 0; }
-
-        .video-aspect {
-            position: relative;
+            width: 100%;
             aspect-ratio: 16 / 9;
             background: #000;
+            /* 動画上にゴールドライン */
+            border-bottom: 2px solid rgba(201,168,76,0.25);
         }
 
         #vimeo-player {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
+            position: absolute; top:0; left:0;
+            width:100%; height:100%;
             pointer-events: none;
         }
 
-        /* === オーバーレイ === */
+        /* =============================
+           オーバーレイ
+        ============================= */
         #overlay {
             position: absolute; inset: 0;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            z-index: 10; cursor: pointer;
-            background: radial-gradient(ellipse at center, rgba(10,8,6,0.55) 0%, rgba(10,8,6,0.88) 100%);
-            backdrop-filter: blur(8px);
+            z-index: 20; cursor: pointer;
+            background: radial-gradient(ellipse at center, rgba(10,8,6,0.5) 0%, rgba(10,8,6,0.9) 100%);
+            backdrop-filter: blur(6px);
+            padding: 16px;
         }
 
-        .overlay-icon { font-size: 40px; margin-bottom: 18px; opacity: 0.7; }
+        .overlay-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            opacity: 0.75;
+        }
 
         #overlay-message {
             text-align: center;
             color: var(--text-main);
-            font-size: clamp(14px, 2vw, 17px);
+            font-size: 13px;
             font-weight: 300;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.18em;
             line-height: 2;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
-
         #overlay-message .countdown-num {
             display: block;
             font-family: 'Cinzel', serif;
-            font-size: clamp(28px, 5vw, 48px);
+            font-size: clamp(26px, 8vw, 40px);
             color: var(--gold-light);
-            letter-spacing: 0.08em;
-            margin-top: 10px;
+            letter-spacing: 0.06em;
+            margin-top: 8px;
+            line-height: 1.3;
         }
-
         #overlay-message .countdown-num small {
             font-family: 'Noto Serif JP', serif;
-            font-size: 0.45em;
+            font-size: 0.42em;
             letter-spacing: 0.15em;
-            opacity: 0.7;
+            opacity: 0.65;
         }
 
         #play-btn {
@@ -219,277 +185,297 @@
             border: 1px solid var(--gold);
             color: var(--gold-light);
             font-family: 'Noto Serif JP', serif;
-            font-size: 15px;
-            letter-spacing: 0.2em;
-            padding: 14px 44px;
+            font-size: 14px;
+            letter-spacing: 0.18em;
+            padding: 12px 32px;
             border-radius: 2px;
             cursor: pointer;
             animation: pulseBtn 2s ease-in-out infinite;
-            transition: background 0.25s;
+            transition: background 0.2s;
+            /* スマホでタップしやすく */
+            min-height: 48px;
         }
-        #play-btn:hover { background: rgba(201,168,76,0.1); }
+        #play-btn:active { background: rgba(201,168,76,0.15); }
 
         @keyframes pulseBtn {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.35); }
-            50% { box-shadow: 0 0 0 14px rgba(201,168,76,0); }
+            0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+            50%      { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
         }
 
-        /* === チャット === */
-        .chat-col {
-            grid-column: 2; grid-row: 1;
-            display: flex; flex-direction: column;
+        /* =============================
+           コンテンツ本体
+        ============================= */
+        .content-area {
+            padding: 0 0 80px; /* 下にCTAが固定されるので余白 */
+        }
+
+        /* =============================
+           チャット（コンパクト）
+        ============================= */
+        .chat-section {
             background: var(--dark-card);
-            border: 1px solid var(--dark-border);
-            border-radius: 3px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            overflow: hidden;
+            border-bottom: 1px solid var(--dark-border);
         }
 
         .chat-header {
-            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
             background: var(--dark-mid);
             border-bottom: 1px solid var(--dark-border);
-            display: flex; align-items: center; justify-content: space-between;
         }
         .chat-header-title {
-            font-size: 11px; letter-spacing: 0.25em;
-            color: var(--text-muted); text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.25em;
+            color: var(--text-muted);
+            text-transform: uppercase;
         }
-        .viewer-count { font-size: 11px; color: var(--gold); letter-spacing: 0.08em; }
 
         .chat-messages {
-            flex: 1; overflow-y: auto; padding: 14px;
-            display: flex; flex-direction: column; gap: 12px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--dark-border) transparent;
+            height: 200px; /* コンパクトに固定 */
+            overflow-y: auto;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scrollbar-width: none; /* スマホでスクロールバー非表示 */
         }
-        .chat-messages::-webkit-scrollbar { width: 3px; }
-        .chat-messages::-webkit-scrollbar-thumb { background: var(--dark-border); }
+        .chat-messages::-webkit-scrollbar { display: none; }
 
-        .chat-message { animation: fadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
-
+        .chat-message { animation: fadeUp 0.35s cubic-bezier(0.22,1,0.36,1); }
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from { opacity:0; transform:translateY(8px); }
+            to   { opacity:1; transform:translateY(0); }
         }
 
         .chat-name {
-            font-size: 10px; letter-spacing: 0.12em;
-            color: var(--text-muted); margin-bottom: 5px; padding-left: 4px;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+            padding-left: 3px;
         }
         .chat-name.self { color: var(--gold); }
 
         .chat-bubble {
             background: var(--dark-mid);
             border: 1px solid var(--dark-border);
-            padding: 9px 13px;
+            padding: 7px 11px;
             border-radius: 2px 10px 10px 10px;
-            font-size: 13px; line-height: 1.65;
+            font-size: 12px;
+            line-height: 1.6;
             color: var(--text-main);
-            display: inline-block; max-width: 100%;
+            display: inline-block;
+            max-width: 90%;
         }
         .chat-bubble.self {
-            background: rgba(201,168,76,0.08);
-            border-color: rgba(201,168,76,0.22);
+            background: rgba(201,168,76,0.07);
+            border-color: rgba(201,168,76,0.2);
             border-radius: 10px 2px 10px 10px;
             color: var(--gold-pale);
         }
 
         .chat-input-area {
-            padding: 10px 12px;
+            display: flex;
+            gap: 8px;
+            padding: 8px 12px 10px;
             background: var(--dark-mid);
             border-top: 1px solid var(--dark-border);
-            display: flex; gap: 8px;
         }
         .chat-input-area input {
-            flex: 1; background: var(--dark-bg);
-            border: 1px solid var(--dark-border); border-radius: 2px;
+            flex: 1;
+            background: var(--dark-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 20px; /* スマホらしくピル型 */
             color: var(--text-main);
-            font-family: 'Noto Serif JP', serif; font-size: 13px;
-            padding: 9px 12px; outline: none;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 13px;
+            padding: 9px 14px;
+            outline: none;
             transition: border-color 0.2s;
+            /* iOSのズーム防止 */
+            font-size: 16px;
         }
         .chat-input-area input:focus { border-color: rgba(201,168,76,0.4); }
-        .chat-input-area input::placeholder { color: var(--text-muted); }
-        .chat-input-area input:disabled { opacity: 0.35; cursor: not-allowed; }
+        .chat-input-area input::placeholder { color: var(--text-muted); font-size: 13px; }
+        .chat-input-area input:disabled { opacity: 0.35; }
 
         .send-btn {
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
             border: none; color: #110a00;
             font-family: 'Noto Serif JP', serif;
-            font-size: 12px; font-weight: 700;
-            letter-spacing: 0.08em;
-            padding: 0 16px; border-radius: 2px;
-            cursor: pointer; transition: opacity 0.2s, transform 0.1s;
-            white-space: nowrap;
+            font-size: 13px; font-weight: 700;
+            padding: 0 16px; border-radius: 20px;
+            cursor: pointer; white-space: nowrap;
+            min-width: 56px; min-height: 42px;
+            transition: opacity 0.2s;
         }
-        .send-btn:hover { opacity: 0.82; }
-        .send-btn:active { transform: scale(0.96); }
-        .send-btn:disabled { background: var(--dark-border); color: var(--text-muted); cursor: not-allowed; }
+        .send-btn:active { opacity: 0.75; }
+        .send-btn:disabled { background: var(--dark-border); color: var(--text-muted); }
 
-        /* === CTA === */
-        .cta-section {
-            grid-column: 1 / -1;
+        /* =============================
+           CTA（画面下部に固定）
+        ============================= */
+        #cta-container {
             display: none;
-            animation: ctaReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 100;
+            animation: ctaSlideUp 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+            padding: 10px 14px 14px;
+            background: linear-gradient(0deg, rgba(10,8,6,0.98) 0%, rgba(10,8,6,0.9) 100%);
+            border-top: 1px solid rgba(201,168,76,0.25);
+            /* セーフエリア対応（iPhone） */
+            padding-bottom: calc(14px + env(safe-area-inset-bottom));
         }
 
-        @keyframes ctaReveal {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
+        @keyframes ctaSlideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
         }
 
-        .cta-inner {
-            border: 1px solid rgba(201,168,76,0.18);
-            border-radius: 3px;
-            padding: 52px 40px;
+        .cta-label {
             text-align: center;
-            background: radial-gradient(ellipse at center top, rgba(201,168,76,0.07) 0%, transparent 55%), var(--dark-card);
-            position: relative; overflow: hidden;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
         }
-        .cta-inner::before {
-            content: '';
-            position: absolute; top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(to right, transparent, var(--gold), transparent);
-        }
-        .cta-inner::after {
-            content: '';
-            position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent);
-        }
-
-        .cta-ornament {
-            font-size: 24px; letter-spacing: 0.6em;
-            color: rgba(201,168,76,0.35); margin-bottom: 20px;
-        }
-
-        .cta-eyebrow {
-            font-size: 11px; letter-spacing: 0.35em;
-            color: var(--gold); margin-bottom: 14px;
-            text-transform: uppercase;
-        }
-
-        .cta-headline {
-            font-size: clamp(20px, 3vw, 32px);
-            font-weight: 300; letter-spacing: 0.2em;
-            color: var(--gold-pale); line-height: 1.8;
-            margin-bottom: 12px;
-        }
-
-        .cta-subtext {
-            font-size: 13px; color: var(--text-muted);
-            letter-spacing: 0.1em; margin-bottom: 36px;
-            line-height: 2;
-        }
+        .cta-label em { font-style: normal; color: #e08080; }
 
         .cta-btn {
-            display: inline-block; text-decoration: none;
+            display: block;
+            text-decoration: none;
+            width: 100%;
+            text-align: center;
             background: linear-gradient(90deg, #9a7020, var(--gold-light), var(--gold), var(--gold-light), #9a7020);
             background-size: 300% 100%;
             color: #0f0900;
             font-family: 'Noto Serif JP', serif;
-            font-size: clamp(16px, 2.2vw, 22px);
-            font-weight: 700; letter-spacing: 0.22em;
-            padding: 22px 72px; border-radius: 2px;
-            box-shadow: 0 8px 32px rgba(201,168,76,0.22), 0 2px 8px rgba(0,0,0,0.5);
-            animation: goldFlow 4s ease-in-out infinite;
-            transition: transform 0.25s, box-shadow 0.25s;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            padding: 16px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+            animation: goldFlow 3.5s ease-in-out infinite;
+            /* タップ領域確保 */
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
         @keyframes goldFlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            0%,100% { background-position: 0% 50%; }
+            50%      { background-position: 100% 50%; }
         }
+        .cta-btn:active { opacity: 0.85; transform: scale(0.99); }
 
-        .cta-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 14px 44px rgba(201,168,76,0.38), 0 4px 12px rgba(0,0,0,0.6);
-        }
+        /* =============================
+           PC時のレイアウト調整
+        ============================= */
+        @media (min-width: 700px) {
+            .site-header { padding: 28px 24px 20px; }
+            .site-header h1 { font-size: 20px; }
 
-        .cta-note {
-            margin-top: 18px; font-size: 12px;
-            color: var(--text-muted); letter-spacing: 0.12em;
-        }
-        .cta-note em { font-style: normal; color: #e08080; }
-
-        /* === レスポンシブ === */
-        @media (max-width: 820px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-                padding: 20px 14px 40px;
+            .page-body {
+                max-width: 600px;
+                margin: 0 auto;
             }
-            .chat-col { grid-column: 1; grid-row: 2; height: 380px; }
-            .cta-section { grid-column: 1; }
-            .cta-inner { padding: 32px 18px; }
-            .cta-btn { padding: 18px 24px; width: 100%; font-size: 16px; }
+
+            .chat-messages { height: 240px; }
+
+            #cta-container {
+                position: static;
+                animation: ctaReveal 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
+                padding: 20px 0 0;
+                background: transparent;
+                border-top: none;
+            }
+            @keyframes ctaReveal {
+                from { opacity:0; transform:translateY(20px); }
+                to   { opacity:1; transform:translateY(0); }
+            }
+            .cta-btn {
+                max-width: 600px;
+                margin: 0 auto;
+                border-radius: 4px;
+                font-size: 20px;
+                padding: 20px;
+            }
+            .cta-label { padding: 0; }
+
+            /* PC時はコンテンツに下余白不要 */
+            .content-area { padding-bottom: 40px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- ヘッダー -->
     <header class="site-header">
-        <div class="header-kamon">✦ &nbsp; ✦ &nbsp; ✦</div>
-        <h1>特別ご祈祷<br><em>限定ライブ配信</em></h1>
-        <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE NOW
+        <div class="header-top">
+            <div class="live-badge">
+                <span class="live-dot"></span>
+                LIVE NOW
+            </div>
+            <h1>特別ご祈祷 <em>限定ライブ配信</em></h1>
         </div>
     </header>
 
-    <div class="main-layout">
+    <div class="page-body">
+
+        <!-- 動画上の案内バナー -->
+        <div class="info-banner">
+            <span class="banner-title">✦ 本日の特別ご祈祷</span>
+            <span class="viewer-count" id="viewer-count">👁 ―</span>
+        </div>
 
         <!-- 動画 -->
-        <div class="video-col">
-            <div class="section-label">配信中</div>
-            <div class="video-frame-outer">
-                <div class="video-aspect">
-                    <iframe
-                        id="vimeo-player"
-                        title="vimeo-player"
-                        width="100%" height="100%" frameborder="0"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-                        allowfullscreen>
-                    </iframe>
+        <div class="video-wrap">
+            <iframe
+                id="vimeo-player"
+                title="vimeo-player"
+                src=""
+                width="100%" height="100%" frameborder="0"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                allowfullscreen>
+            </iframe>
 
-                    <div id="overlay">
-                        <div class="overlay-icon">🪷</div>
-                        <div id="overlay-message"></div>
-                        <button id="play-btn">🔊 タップして音声をONにする</button>
-                    </div>
+            <div id="overlay">
+                <div class="overlay-icon">🪷</div>
+                <div id="overlay-message"></div>
+                <button id="play-btn">🔊 タップして音声をONにする</button>
+            </div>
+        </div>
+
+        <!-- コンテンツ -->
+        <div class="content-area">
+
+            <!-- チャット -->
+            <div class="chat-section">
+                <div class="chat-header">
+                    <span class="chat-header-title">💬 Live Chat</span>
+                    <span style="font-size:10px;color:var(--text-muted);letter-spacing:0.05em;" id="chat-status">配信開始後に参加できます</span>
+                </div>
+                <div class="chat-messages" id="chat-messages"></div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="メッセージを入力…" disabled>
+                    <button class="send-btn" id="chat-submit" disabled>送信</button>
                 </div>
             </div>
+
         </div>
 
-        <!-- チャット -->
-        <div class="chat-col">
-            <div class="chat-header">
-                <span class="chat-header-title">Live Chat</span>
-                <span class="viewer-count" id="viewer-count">👁 ―</span>
-            </div>
-            <div class="chat-messages" id="chat-messages"></div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="メッセージを入力…" disabled>
-                <button class="send-btn" id="chat-submit" disabled>送信</button>
-            </div>
-        </div>
+    </div><!-- /page-body -->
 
-        <!-- CTA -->
-        <div class="cta-section" id="cta-container">
-            <div class="cta-inner">
-                <div class="cta-ornament">― ✦ ―</div>
-                <p class="cta-eyebrow">Special Offer — Limited</p>
-                <h2 class="cta-headline">特別ご祈祷枠<br>ただいま受付中</h2>
-                <p class="cta-subtext">
-                    本日の限定枠は残りわずかです。<br>
-                    ご縁を感じられた方は、ぜひこの機会にお申し込みください。
-                </p>
-                <!-- 【本番用】href を決済ページURLに差し替えてください -->
-                <a href="#" class="cta-btn">✨ &nbsp; 今すぐお申し込みはこちら &nbsp; ✨</a>
-                <p class="cta-note">※ 限定枠のため、<em>定員に達し次第</em>受付を終了いたします</p>
-            </div>
-        </div>
-
+    <!-- CTA（固定フッター） -->
+    <div id="cta-container">
+        <div class="cta-label">✦ 限定枠 ・ <em>定員に達し次第終了</em> ✦</div>
+        <!-- 【本番用】href を決済ページURLに差し替えてください -->
+        <a href="#" class="cta-btn">✨ &nbsp; 今すぐお申し込みはこちら &nbsp; ✨</a>
     </div>
 
     <script>
@@ -503,10 +489,13 @@
          *  例) 夜8時30分スタート → START_HOUR = 20, START_MINUTE = 30
          * ============================================================ */
         const START_HOUR   = 21;   // ← ここを変える（0〜23）
-        const START_MINUTE = 10;    // ← ここを変える（0〜59）
+        const START_MINUTE = 0;    // ← ここを変える（0〜59）
         /* ============================================================ */
 
         const CTA_APPEAR_SECONDS = 120; // 購入ボタンが出るまでの秒数（2分=120）
+
+        // VimeoのURL（開始時刻になって初めてセットする）
+        const VIMEO_SRC = 'https://player.vimeo.com/video/1168468796?h=ab28f6c45f&autoplay=1&muted=1&controls=0';
 
         const VIEWER_COUNTS = [127,143,158,172,189,201,217,224,238,251,263,271,248,239,255];
         let viewerIdx = 0;
@@ -528,7 +517,8 @@
             { time: 230, name: "洋子",   text: "先生、今日も素晴らしい時間をありがとうございました！" }
         ];
 
-        const iframe        = document.getElementById('vimeo-player');
+        // DOM
+        const iframeEl      = document.getElementById('vimeo-player');
         const overlay       = document.getElementById('overlay');
         const overlayMsg    = document.getElementById('overlay-message');
         const playBtn       = document.getElementById('play-btn');
@@ -537,8 +527,7 @@
         const chatInput     = document.getElementById('chat-input');
         const chatSubmitBtn = document.getElementById('chat-submit');
         const viewerCountEl = document.getElementById('viewer-count');
-
-        const VIMEO_SRC = 'https://player.vimeo.com/video/1168468796?h=ab28f6c45f&autoplay=1&muted=1&controls=0';
+        const chatStatus    = document.getElementById('chat-status');
 
         let player           = null;
         let playerReady      = false;
@@ -548,21 +537,21 @@
         let currentVideoTime = 0;
         let isSeeking        = false;
 
-        // 開始時刻になって初めてiframeにsrcをセットし、Playerを初期化する
+        // 開始時刻になって初めてiframeにsrcをセットしPlayerを起動
         function initPlayer() {
             if (playerReady) return;
             playerReady = true;
-            iframe.src = VIMEO_SRC;
-            player = new Vimeo.Player(iframe);
+            iframeEl.src = VIMEO_SRC;
+            player = new Vimeo.Player(iframeEl);
             player.getDuration().then(d => videoDuration = d);
             player.on('timeupdate', d => currentVideoTime = d.seconds);
         }
 
         function getStartTime() {
             const now = new Date();
-            let start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), START_HOUR, START_MINUTE, 0);
-            if (now.getTime() - start.getTime() > 3 * 60 * 60 * 1000) start.setDate(start.getDate() + 1);
-            return start.getTime();
+            let s = new Date(now.getFullYear(), now.getMonth(), now.getDate(), START_HOUR, START_MINUTE, 0);
+            if (now.getTime() - s.getTime() > 3 * 60 * 60 * 1000) s.setDate(s.getDate() + 1);
+            return s.getTime();
         }
         const startTime = getStartTime();
 
@@ -597,15 +586,14 @@
             appendChat('あなた', text, true);
             chatInput.value = '';
         }
-
         chatSubmitBtn.addEventListener('click', sendMyChat);
         chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMyChat(); });
 
+        // 視聴者数演出
         setInterval(() => {
             if (isUserInteracted) {
-                const base   = VIEWER_COUNTS[viewerIdx % VIEWER_COUNTS.length];
-                const jitter = Math.floor(Math.random() * 9) - 4;
-                viewerCountEl.textContent = `👁 ${base + jitter}`;
+                const base = VIEWER_COUNTS[viewerIdx % VIEWER_COUNTS.length];
+                viewerCountEl.textContent = `👁 ${base + Math.floor(Math.random()*9)-4}`;
                 viewerIdx++;
             }
         }, 9000);
@@ -614,6 +602,7 @@
             const now     = Date.now();
             const elapsed = (now - startTime) / 1000;
 
+            // ── 開始前（カウントダウン） ──
             if (elapsed < 0) {
                 const remain = Math.abs(Math.floor(elapsed));
                 const h = Math.floor(remain / 3600);
@@ -627,30 +616,36 @@
                 overlayMsg.innerHTML  = `配信開始までお待ちください<span class="countdown-num">${tStr}</span>`;
                 playBtn.style.display = 'none';
                 chatInput.disabled = chatSubmitBtn.disabled = true;
+                chatStatus.textContent = '配信開始後に参加できます';
                 requestAnimationFrame(syncVideoTime);
                 return;
             }
 
-            // 開始時刻になったらここで初めてPlayerを起動
+            // ── 開始時刻になったらPlayerを起動 ──
             initPlayer();
 
+            // ── 配信終了後 ──
             if (videoDuration > 0 && elapsed >= videoDuration) {
                 if (player) player.pause();
                 overlay.style.display = 'flex';
-                overlayMsg.innerHTML  = '本日のご祈祷配信は終了いたしました。<br><small style="opacity:0.55;font-size:0.85em;">またのご縁をお待ちしております。</small>';
+                overlayMsg.innerHTML  = '本日のご祈祷配信は終了いたしました。<br><small style="opacity:0.5;font-size:0.85em;letter-spacing:0.1em;">またのご縁をお待ちしております。</small>';
                 playBtn.style.display = 'none';
                 chatInput.disabled = chatSubmitBtn.disabled = true;
                 return;
             }
 
+            // ── 配信中 ──
             if (!isUserInteracted) {
                 overlay.style.display = 'flex';
                 overlayMsg.innerHTML  = '配信が始まっています';
                 playBtn.style.display = 'inline-block';
             } else {
+                overlay.style.display = 'none';
                 chatInput.disabled = chatSubmitBtn.disabled = false;
+                chatStatus.textContent = 'チャットに参加中';
             }
 
+            // 時間同期
             if (player && !isSeeking && Math.abs(currentVideoTime - Math.max(0, elapsed)) > 2.0) {
                 isSeeking = true;
                 player.setCurrentTime(Math.max(0, elapsed))
@@ -667,10 +662,13 @@
 
         syncVideoTime();
 
+        // 音声ON タップ
         overlay.addEventListener('click', () => {
             const elapsed = (Date.now() - startTime) / 1000;
             if (elapsed < 0) return;
             if (videoDuration > 0 && elapsed >= videoDuration) return;
+            if (!player) return;
+
             isUserInteracted = true;
             player.setMuted(false);
             player.setVolume(1);
