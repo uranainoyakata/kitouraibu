@@ -4,305 +4,680 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【限定公開】特別ご祈祷ライブ配信</title>
-    <!-- Vimeoの操作に必要な公式システムを読み込み -->
     <script src="https://player.vimeo.com/api/player.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 基本スタイル */
-        body { margin: 0; background-color: #111; color: #fff; font-family: 'Helvetica Neue', Arial, sans-serif; }
-        h1 { text-align: center; margin-top: 20px; font-size: 24px; color: #f3e5ab; }
-
-        /* レイアウト */
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            max-width: 1100px;
-            margin: 20px auto;
-            gap: 20px;
-            padding: 0 10px;
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #f0d080;
+            --gold-pale: #f7ebb8;
+            --dark-bg: #0a0806;
+            --dark-card: #120f0a;
+            --dark-mid: #1c1710;
+            --dark-border: #2e2618;
+            --text-main: #ede0c4;
+            --text-muted: #8a7a5e;
+            --red-live: #e05555;
         }
 
-        /* --- 左側：動画エリア --- */
-        .video-col {
-            flex: 1 1 650px;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            font-family: 'Noto Serif JP', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 10% 30%, rgba(201,168,76,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 40% at 90% 70%, rgba(201,168,76,0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === ヘッダー === */
+        .site-header {
             position: relative;
-            background: #000;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px 24px;
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .header-kamon {
+            font-size: 26px;
+            letter-spacing: 0.4em;
+            color: var(--gold);
+            margin-bottom: 12px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.65; }
+            50% { opacity: 1; }
+        }
+
+        .site-header h1 {
+            font-family: 'Noto Serif JP', serif;
+            font-weight: 300;
+            font-size: clamp(18px, 3vw, 26px);
+            letter-spacing: 0.3em;
+            color: var(--gold-pale);
+            line-height: 1.8;
+        }
+
+        .site-header h1 em {
+            font-style: normal;
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 16px;
+            background: rgba(224,85,85,0.1);
+            border: 1px solid rgba(224,85,85,0.35);
+            color: #f08080;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            padding: 5px 18px;
+            border-radius: 2px;
+        }
+
+        .live-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--red-live);
+            animation: blink 1.2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.15; }
+        }
+
+        /* === メインレイアウト === */
+        .main-layout {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 20px 60px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+        }
+
+        /* === 動画 === */
+        .video-col { grid-column: 1; grid-row: 1; }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+        }
+        .section-label::before { background: linear-gradient(to right, transparent, var(--dark-border)); }
+        .section-label::after  { background: linear-gradient(to left,  transparent, var(--dark-border)); }
+
+        .video-frame-outer {
+            position: relative;
+            border: 1px solid var(--dark-border);
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 1px rgba(201,168,76,0.08),
+                0 30px 80px rgba(0,0,0,0.8);
+        }
+
+        .video-frame-outer::before,
+        .video-frame-outer::after {
+            content: '';
+            position: absolute;
+            width: 18px; height: 18px;
+            border-color: rgba(201,168,76,0.5);
+            border-style: solid;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .video-frame-outer::before { top: 7px; left: 7px; border-width: 1px 0 0 1px; }
+        .video-frame-outer::after  { bottom: 7px; right: 7px; border-width: 0 1px 1px 0; }
+
+        .video-aspect {
+            position: relative;
             aspect-ratio: 16 / 9;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            border-radius: 8px;
+            background: #000;
+        }
+
+        #vimeo-player {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        /* === オーバーレイ === */
+        #overlay {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 10; cursor: pointer;
+            background: radial-gradient(ellipse at center, rgba(10,8,6,0.55) 0%, rgba(10,8,6,0.88) 100%);
+            backdrop-filter: blur(8px);
+        }
+
+        .overlay-icon { font-size: 40px; margin-bottom: 18px; opacity: 0.7; }
+
+        #overlay-message {
+            text-align: center;
+            color: var(--text-main);
+            font-size: clamp(14px, 2vw, 17px);
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            line-height: 2;
+            margin-bottom: 30px;
+        }
+
+        #overlay-message .countdown-num {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(28px, 5vw, 48px);
+            color: var(--gold-light);
+            letter-spacing: 0.08em;
+            margin-top: 10px;
+        }
+
+        #overlay-message .countdown-num small {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 0.45em;
+            letter-spacing: 0.15em;
+            opacity: 0.7;
+        }
+
+        #play-btn {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold-light);
+            font-family: 'Noto Serif JP', serif;
+            font-size: 15px;
+            letter-spacing: 0.2em;
+            padding: 14px 44px;
+            border-radius: 2px;
+            cursor: pointer;
+            animation: pulseBtn 2s ease-in-out infinite;
+            transition: background 0.25s;
+        }
+        #play-btn:hover { background: rgba(201,168,76,0.1); }
+
+        @keyframes pulseBtn {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.35); }
+            50% { box-shadow: 0 0 0 14px rgba(201,168,76,0); }
+        }
+
+        /* === チャット === */
+        .chat-col {
+            grid-column: 2; grid-row: 1;
+            display: flex; flex-direction: column;
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 3px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             overflow: hidden;
         }
-        
-        /* Vimeoをピッタリはめ込み、クリック（一時停止など）を防止 */
-        #vimeo-player {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; /* 視聴者の動画操作をブロック */
-        }
 
-        /* 音声ON＆待機画面のオーバーレイ */
-        #overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 10; cursor: pointer; backdrop-filter: blur(5px);
-        }
-        .play-btn {
-            background: #d4af37; color: #111; padding: 15px 40px; font-size: 24px;
-            font-weight: bold; border-radius: 50px; animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
-        }
-
-        /* --- 右側：チャットエリア --- */
-        .chat-col {
-            flex: 0 0 320px;
-            background: #222;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            height: calc(650px * 9 / 16);
-            min-height: 400px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-        }
         .chat-header {
-            background: #333; padding: 15px; text-align: center;
-            font-weight: bold; font-size: 16px; border-radius: 8px 8px 0 0; border-bottom: 1px solid #444;
-            color: #f3e5ab;
+            padding: 14px 18px;
+            background: var(--dark-mid);
+            border-bottom: 1px solid var(--dark-border);
+            display: flex; align-items: center; justify-content: space-between;
         }
+        .chat-header-title {
+            font-size: 11px; letter-spacing: 0.25em;
+            color: var(--text-muted); text-transform: uppercase;
+        }
+        .viewer-count { font-size: 11px; color: var(--gold); letter-spacing: 0.08em; }
+
         .chat-messages {
-            flex: 1; overflow-y: auto; padding: 15px; display: flex;
-            flex-direction: column; gap: 12px;
+            flex: 1; overflow-y: auto; padding: 14px;
+            display: flex; flex-direction: column; gap: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--dark-border) transparent;
         }
-        .chat-message { animation: fadeInChat 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .chat-name { font-size: 12px; color: #aaa; margin-bottom: 4px; margin-left: 5px; }
-        .chat-text {
-            background: #444; padding: 10px 14px; border-radius: 18px;
-            display: inline-block; font-size: 14px; line-height: 1.4; color: #eee;
-        }
-        @keyframes fadeInChat {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        .chat-messages::-webkit-scrollbar { width: 3px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--dark-border); }
+
+        .chat-message { animation: fadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- 購入ボタンエリア --- */
-        .cta-wrapper { text-align: center; width: 100%; margin-top: 20px; }
-        #cta-container { display: none; animation: fadeIn 1s forwards; }
-        .cta-btn {
-            background: linear-gradient(to right, #d4af37, #f3e5ab, #d4af37); 
-            color: #333; 
-            padding: 20px 60px; font-size: 28px; font-weight: bold; text-decoration: none;
-            border-radius: 10px; display: inline-block; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        .chat-name {
+            font-size: 10px; letter-spacing: 0.12em;
+            color: var(--text-muted); margin-bottom: 5px; padding-left: 4px;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .chat-name.self { color: var(--gold); }
+
+        .chat-bubble {
+            background: var(--dark-mid);
+            border: 1px solid var(--dark-border);
+            padding: 9px 13px;
+            border-radius: 2px 10px 10px 10px;
+            font-size: 13px; line-height: 1.65;
+            color: var(--text-main);
+            display: inline-block; max-width: 100%;
+        }
+        .chat-bubble.self {
+            background: rgba(201,168,76,0.08);
+            border-color: rgba(201,168,76,0.22);
+            border-radius: 10px 2px 10px 10px;
+            color: var(--gold-pale);
+        }
+
+        .chat-input-area {
+            padding: 10px 12px;
+            background: var(--dark-mid);
+            border-top: 1px solid var(--dark-border);
+            display: flex; gap: 8px;
+        }
+        .chat-input-area input {
+            flex: 1; background: var(--dark-bg);
+            border: 1px solid var(--dark-border); border-radius: 2px;
+            color: var(--text-main);
+            font-family: 'Noto Serif JP', serif; font-size: 13px;
+            padding: 9px 12px; outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input-area input:focus { border-color: rgba(201,168,76,0.4); }
+        .chat-input-area input::placeholder { color: var(--text-muted); }
+        .chat-input-area input:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border: none; color: #110a00;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 0 16px; border-radius: 2px;
+            cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+        .send-btn:hover { opacity: 0.82; }
+        .send-btn:active { transform: scale(0.96); }
+        .send-btn:disabled { background: var(--dark-border); color: var(--text-muted); cursor: not-allowed; }
+
+        /* === CTA === */
+        .cta-section {
+            grid-column: 1 / -1;
+            display: none;
+            animation: ctaReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes ctaReveal {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .cta-inner {
+            border: 1px solid rgba(201,168,76,0.18);
+            border-radius: 3px;
+            padding: 52px 40px;
+            text-align: center;
+            background: radial-gradient(ellipse at center top, rgba(201,168,76,0.07) 0%, transparent 55%), var(--dark-card);
+            position: relative; overflow: hidden;
+        }
+        .cta-inner::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+        .cta-inner::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent);
+        }
+
+        .cta-ornament {
+            font-size: 24px; letter-spacing: 0.6em;
+            color: rgba(201,168,76,0.35); margin-bottom: 20px;
+        }
+
+        .cta-eyebrow {
+            font-size: 11px; letter-spacing: 0.35em;
+            color: var(--gold); margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .cta-headline {
+            font-size: clamp(20px, 3vw, 32px);
+            font-weight: 300; letter-spacing: 0.2em;
+            color: var(--gold-pale); line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .cta-subtext {
+            font-size: 13px; color: var(--text-muted);
+            letter-spacing: 0.1em; margin-bottom: 36px;
+            line-height: 2;
+        }
+
+        .cta-btn {
+            display: inline-block; text-decoration: none;
+            background: linear-gradient(90deg, #9a7020, var(--gold-light), var(--gold), var(--gold-light), #9a7020);
+            background-size: 300% 100%;
+            color: #0f0900;
+            font-family: 'Noto Serif JP', serif;
+            font-size: clamp(16px, 2.2vw, 22px);
+            font-weight: 700; letter-spacing: 0.22em;
+            padding: 22px 72px; border-radius: 2px;
+            box-shadow: 0 8px 32px rgba(201,168,76,0.22), 0 2px 8px rgba(0,0,0,0.5);
+            animation: goldFlow 4s ease-in-out infinite;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        @keyframes goldFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 44px rgba(201,168,76,0.38), 0 4px 12px rgba(0,0,0,0.6);
+        }
+
+        .cta-note {
+            margin-top: 18px; font-size: 12px;
+            color: var(--text-muted); letter-spacing: 0.12em;
+        }
+        .cta-note em { font-style: normal; color: #e08080; }
+
+        /* === レスポンシブ === */
+        @media (max-width: 820px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                padding: 20px 14px 40px;
+            }
+            .chat-col { grid-column: 1; grid-row: 2; height: 380px; }
+            .cta-section { grid-column: 1; }
+            .cta-inner { padding: 32px 18px; }
+            .cta-btn { padding: 18px 24px; width: 100%; font-size: 16px; }
+        }
     </style>
 </head>
 <body>
 
-    <h1>✨ 特別ご祈祷 ライブ配信中 ✨</h1>
+    <header class="site-header">
+        <div class="header-kamon">✦ &nbsp; ✦ &nbsp; ✦</div>
+        <h1>特別ご祈祷<br><em>限定ライブ配信</em></h1>
+        <div class="live-badge">
+            <span class="live-dot"></span>
+            LIVE NOW
+        </div>
+    </header>
 
-    <div class="container">
-        <!-- 左：動画エリア -->
+    <div class="main-layout">
+
+        <!-- 動画 -->
         <div class="video-col">
-            <!-- いただいたVimeoのURLに、自動再生・消音・操作バー非表示の設定(&autoplay=1&muted=1&controls=0)を追加して埋め込み -->
-            <iframe 
-                id="vimeo-player" 
-                src="https://player.vimeo.com/video/154373242?h=afc9fbfe4e&autoplay=1&muted=1&controls=0" 
-                frameborder="0" 
-                allow="autoplay; fullscreen; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-            
-            <div id="overlay">
-                <h2 id="overlay-message" style="text-align:center; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px #000;">
-                    <!-- カウントダウン文字が自動で入ります -->
-                </h2>
-                <div id="play-btn" class="play-btn" style="display: none;">ここをタップして音声ON🔊</div>
+            <div class="section-label">配信中</div>
+            <div class="video-frame-outer">
+                <div class="video-aspect">
+                    <iframe
+                        id="vimeo-player"
+                        title="vimeo-player"
+                        width="100%" height="100%" frameborder="0"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                        allowfullscreen>
+                    </iframe>
+
+                    <div id="overlay">
+                        <div class="overlay-icon">🪷</div>
+                        <div id="overlay-message"></div>
+                        <button id="play-btn">🔊 タップして音声をONにする</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 右：チャットエリア -->
+        <!-- チャット -->
         <div class="chat-col">
-            <div class="chat-header">💬 ライブチャット</div>
+            <div class="chat-header">
+                <span class="chat-header-title">Live Chat</span>
+                <span class="viewer-count" id="viewer-count">👁 ―</span>
+            </div>
             <div class="chat-messages" id="chat-messages"></div>
-        </div>
-
-        <!-- 下：購入ボタン -->
-        <div class="cta-wrapper">
-            <div id="cta-container">
-                <!-- 【本番用】ここの href を決済ページのURLに差し替えてください -->
-                <a href="#" class="cta-btn">✨ 特別ご祈祷枠（限定）に申し込む ✨</a>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="メッセージを入力…" disabled>
+                <button class="send-btn" id="chat-submit" disabled>送信</button>
             </div>
         </div>
+
+        <!-- CTA -->
+        <div class="cta-section" id="cta-container">
+            <div class="cta-inner">
+                <div class="cta-ornament">― ✦ ―</div>
+                <p class="cta-eyebrow">Special Offer — Limited</p>
+                <h2 class="cta-headline">特別ご祈祷枠<br>ただいま受付中</h2>
+                <p class="cta-subtext">
+                    本日の限定枠は残りわずかです。<br>
+                    ご縁を感じられた方は、ぜひこの機会にお申し込みください。
+                </p>
+                <!-- 【本番用】href を決済ページURLに差し替えてください -->
+                <a href="#" class="cta-btn">✨ &nbsp; 今すぐお申し込みはこちら &nbsp; ✨</a>
+                <p class="cta-note">※ 限定枠のため、<em>定員に達し次第</em>受付を終了いたします</p>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // ==========================================
-        // ★設定1：毎日の「配信開始時刻」
-        // ==========================================
-        const START_HOUR = 19;   // 19時
-        const START_MINUTE = 10; // 10分
+        /* ============================================================
+         * ★★★★★ ここだけ変えればOK！！★★★★★
+         * ------------------------------------------------------------
+         *  START_HOUR   … 配信開始「時」（24時間表記）
+         *  START_MINUTE … 配信開始「分」
+         *
+         *  例) 夜9時00分スタート → START_HOUR = 21, START_MINUTE = 0
+         *  例) 夜8時30分スタート → START_HOUR = 20, START_MINUTE = 30
+         * ============================================================ */
+        const START_HOUR   = 21;   // ← ここを変える（0〜23）
+        const START_MINUTE = 10;    // ← ここを変える（0〜59）
+        /* ============================================================ */
 
-        // ==========================================
-        // ★設定2：動画開始から「何秒後」に購入ボタンを出すか？
-        // ==========================================
-        const CTA_APPEAR_SECONDS = 15; // テスト用（本番はセールス開始の秒数に変更）
+        const CTA_APPEAR_SECONDS = 120; // 購入ボタンが出るまでの秒数（2分=120）
 
-        // ==========================================
-        // ★設定3：サクラのチャットシナリオ
-        // ==========================================
-        const chatData =[
-            { time: 2,  name: "恵子", text: "こんばんは。先生、今日もよろしくお願いします✨" },
-            { time: 5,  name: "Y.K", text: "音声聞こえています。すでに画面からすごいエネルギーを感じます！" },
-            { time: 8,  name: "美穂", text: "最近ついてないことが多かったので、今日のお話をずっと楽しみにしていました🥲" },
-            { time: 11, name: "さゆり", text: "先日の遠隔ヒーリングのおかげで、本当に臨時収入がありました！今日も期待してます！" },
-            { time: 14, name: "洋子", text: "すごい…そんな特別なご祈祷をしていただけるんですね😭" },
-            { time: 16, name: "真由美", text: "えっ、このお初穂料（お値段）でいいんですか…！？" },
-            { time: 17, name: "A.I", text: "ずっと悩んでいましたが、これもご縁だと思い申し込みました！先生、よろしくお願いいたします🙏" },
-            { time: 19, name: "和子", text: "私も今申し込み完了しました！なんだかホッとして涙が出てきました。" },
-            { time: 22, name: "ひろみ", text: "限定枠、なんとか入れました！これからの自分の変化が楽しみです🌸" }
+        const VIEWER_COUNTS = [127,143,158,172,189,201,217,224,238,251,263,271,248,239,255];
+        let viewerIdx = 0;
+
+        const chatData = [
+            { time: 5,   name: "山田",   text: "こんばんは！よろしくお願いします🙏" },
+            { time: 15,  name: "Y.K",    text: "音声ばっちりです！画面からすごいエネルギーを感じます✨" },
+            { time: 30,  name: "恵子",   text: "先生、今日も楽しみに待っていました！" },
+            { time: 50,  name: "美穂",   text: "最近なんだか重い感じがして…今日でスッキリ浄化されたいです🥲" },
+            { time: 70,  name: "T.M",    text: "しっかりメモを取りながら聞かせていただきます✍️" },
+            { time: 95,  name: "さゆり", text: "先日のご祈祷から本当に流れが変わりました！感謝しかありません。" },
+            { time: 110, name: "洋子",   text: "なるほど、そういう意味があったんですね…！" },
+            { time: 125, name: "A.I",    text: "えっ、そんな特別なご案内があるんですか！？" },
+            { time: 135, name: "鈴木",   text: "このお初穂料…逆にお安すぎませんか！？" },
+            { time: 150, name: "恵子",   text: "ずっと迷ってましたが、これもご縁だと思い、すぐに申し込みました！よろしくお願いいたします🙏" },
+            { time: 170, name: "さゆり", text: "私も参加します！自分のこれからの変化が楽しみです🌸" },
+            { time: 195, name: "Y.K",    text: "なんとか限定枠に入れました！ホッとしています。" },
+            { time: 215, name: "美穂",   text: "本当にありがとうございました。心がとても軽くなりました✨" },
+            { time: 230, name: "洋子",   text: "先生、今日も素晴らしい時間をありがとうございました！" }
         ];
 
-        // --- Vimeoプレイヤーの初期化設定 ---
-        const iframe = document.getElementById('vimeo-player');
-        const player = new Vimeo.Player(iframe);
-
-        const overlay = document.getElementById('overlay');
-        const overlayMessage = document.getElementById('overlay-message');
-        const playBtn = document.getElementById('play-btn');
-        const ctaContainer = document.getElementById('cta-container');
+        const iframe        = document.getElementById('vimeo-player');
+        const overlay       = document.getElementById('overlay');
+        const overlayMsg    = document.getElementById('overlay-message');
+        const playBtn       = document.getElementById('play-btn');
+        const ctaContainer  = document.getElementById('cta-container');
         const chatContainer = document.getElementById('chat-messages');
-        
-        let lastChatIndex = -1;
-        let isUserInteracted = false; 
-        
-        // Vimeoの動画状態を管理する変数
-        let videoDuration = 0;
+        const chatInput     = document.getElementById('chat-input');
+        const chatSubmitBtn = document.getElementById('chat-submit');
+        const viewerCountEl = document.getElementById('viewer-count');
+
+        const VIMEO_SRC = 'https://player.vimeo.com/video/1168468796?h=ab28f6c45f&autoplay=1&muted=1&controls=0';
+
+        let player           = null;
+        let playerReady      = false;
+        let lastChatIndex    = -1;
+        let isUserInteracted = false;
+        let videoDuration    = 0;
         let currentVideoTime = 0;
-        let isSeeking = false;
+        let isSeeking        = false;
 
-        // 動画の合計時間を取得
-        player.getDuration().then(function(duration) {
-            videoDuration = duration;
-        });
+        // 開始時刻になって初めてiframeにsrcをセットし、Playerを初期化する
+        function initPlayer() {
+            if (playerReady) return;
+            playerReady = true;
+            iframe.src = VIMEO_SRC;
+            player = new Vimeo.Player(iframe);
+            player.getDuration().then(d => videoDuration = d);
+            player.on('timeupdate', d => currentVideoTime = d.seconds);
+        }
 
-        // 動画の現在時間を常に記録
-        player.on('timeupdate', function(data) {
-            currentVideoTime = data.seconds;
-        });
-
-        // 1. 今日の配信開始時刻を取得
         function getStartTime() {
             const now = new Date();
             let start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), START_HOUR, START_MINUTE, 0);
-            
-            // 配信開始から「3時間以上」過ぎている場合は、翌日の配信時刻にする
-            if (now.getTime() - start.getTime() > 3 * 60 * 60 * 1000) {
-                start.setDate(start.getDate() + 1);
-            }
+            if (now.getTime() - start.getTime() > 3 * 60 * 60 * 1000) start.setDate(start.getDate() + 1);
             return start.getTime();
         }
-
         const startTime = getStartTime();
 
-        // 2. チャットを表示する処理
-        function renderChats(elapsedSeconds) {
-            let isAdded = false;
-            for (let i = lastChatIndex + 1; i < chatData.length; i++) {
-                const chat = chatData[i];
-                if (elapsedSeconds >= chat.time) {
-                    const chatEl = document.createElement('div');
-                    chatEl.className = 'chat-message';
-                    chatEl.innerHTML = `<div class="chat-name">${chat.name}</div><div class="chat-text">${chat.text}</div>`;
-                    chatContainer.appendChild(chatEl);
-                    lastChatIndex = i;
-                    isAdded = true;
-                } else {
-                    break; 
-                }
-            }
-            if (isAdded) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
+        function escHtml(s) {
+            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
 
-        // 3. 動画の時間とイベントを同期させるメイン処理
-        function syncVideoTime() {
-            const now = Date.now();
-            const elapsedSeconds = (now - startTime) / 1000;
+        function appendChat(name, text, isSelf) {
+            const el = document.createElement('div');
+            el.className = 'chat-message';
+            el.innerHTML = `
+                <div class="chat-name ${isSelf?'self':''}">${escHtml(name)}</div>
+                <div class="chat-bubble ${isSelf?'self':''}">${escHtml(text)}</div>`;
+            chatContainer.appendChild(el);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
 
-            // ===== ① 配信開始前（カウントダウン） =====
-            if (elapsedSeconds < 0) {
-                const remainTotalSeconds = Math.abs(Math.floor(elapsedSeconds));
-                const h = Math.floor(remainTotalSeconds / 3600);
-                const m = Math.floor((remainTotalSeconds % 3600) / 60);
-                const s = remainTotalSeconds % 60;
-                
+        function renderChats(elapsed) {
+            let added = false;
+            for (let i = lastChatIndex + 1; i < chatData.length; i++) {
+                if (elapsed >= chatData[i].time) {
+                    appendChat(chatData[i].name, chatData[i].text, false);
+                    lastChatIndex = i; added = true;
+                } else break;
+            }
+            if (added) chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function sendMyChat() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            appendChat('あなた', text, true);
+            chatInput.value = '';
+        }
+
+        chatSubmitBtn.addEventListener('click', sendMyChat);
+        chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMyChat(); });
+
+        setInterval(() => {
+            if (isUserInteracted) {
+                const base   = VIEWER_COUNTS[viewerIdx % VIEWER_COUNTS.length];
+                const jitter = Math.floor(Math.random() * 9) - 4;
+                viewerCountEl.textContent = `👁 ${base + jitter}`;
+                viewerIdx++;
+            }
+        }, 9000);
+
+        function syncVideoTime() {
+            const now     = Date.now();
+            const elapsed = (now - startTime) / 1000;
+
+            if (elapsed < 0) {
+                const remain = Math.abs(Math.floor(elapsed));
+                const h = Math.floor(remain / 3600);
+                const m = Math.floor((remain % 3600) / 60);
+                const s = remain % 60;
+                const tStr = h > 0
+                    ? `${h}<small>時間</small> ${String(m).padStart(2,'0')}<small>分</small> ${String(s).padStart(2,'0')}<small>秒</small>`
+                    : `${String(m).padStart(2,'0')}<small>分</small> ${String(s).padStart(2,'0')}<small>秒</small>`;
+
                 overlay.style.display = 'flex';
-                let timeText = h > 0 ? `${h}時間 ${m}分 ${s}秒` : `${m}分 ${s}秒`;
-                
-                overlayMessage.innerHTML = `⏳ 配信開始までお待ちください<br><br><span style="font-size: 20px;">開始まで あと ${timeText}</span>`;
-                playBtn.style.display = 'none'; 
-                
+                overlayMsg.innerHTML  = `配信開始までお待ちください<span class="countdown-num">${tStr}</span>`;
+                playBtn.style.display = 'none';
+                chatInput.disabled = chatSubmitBtn.disabled = true;
                 requestAnimationFrame(syncVideoTime);
                 return;
             }
 
-            // ===== ② 配信終了後 =====
-            if (videoDuration > 0 && elapsedSeconds >= videoDuration) {
-                player.pause();
-                if (!isUserInteracted) {
-                    overlay.style.display = 'flex';
-                    overlayMessage.innerHTML = '本日のご祈祷配信は終了いたしました。<br>またのご縁をお待ちしております。';
-                    playBtn.style.display = 'none';
-                }
+            // 開始時刻になったらここで初めてPlayerを起動
+            initPlayer();
+
+            if (videoDuration > 0 && elapsed >= videoDuration) {
+                if (player) player.pause();
+                overlay.style.display = 'flex';
+                overlayMsg.innerHTML  = '本日のご祈祷配信は終了いたしました。<br><small style="opacity:0.55;font-size:0.85em;">またのご縁をお待ちしております。</small>';
+                playBtn.style.display = 'none';
+                chatInput.disabled = chatSubmitBtn.disabled = true;
                 return;
             }
 
-            // ===== ③ 配信中（時間同期処理） =====
             if (!isUserInteracted) {
                 overlay.style.display = 'flex';
-                overlayMessage.innerHTML = '▶ 配信が開始されています';
+                overlayMsg.innerHTML  = '配信が始まっています';
                 playBtn.style.display = 'inline-block';
+            } else {
+                chatInput.disabled = chatSubmitBtn.disabled = false;
             }
 
-            // Vimeo APIを使った時間調整（ズレが2秒以上ある場合のみ）
-            if (!isSeeking && Math.abs(currentVideoTime - Math.max(0, elapsedSeconds)) > 2.0) {
+            if (player && !isSeeking && Math.abs(currentVideoTime - Math.max(0, elapsed)) > 2.0) {
                 isSeeking = true;
-                player.setCurrentTime(Math.max(0, elapsedSeconds)).then(function() {
-                    isSeeking = false;
-                }).catch(function() {
-                    isSeeking = false;
-                });
+                player.setCurrentTime(Math.max(0, elapsed))
+                    .then(() => isSeeking = false)
+                    .catch(() => isSeeking = false);
             }
 
-            renderChats(elapsedSeconds);
+            renderChats(elapsed);
 
-            if (elapsedSeconds >= CTA_APPEAR_SECONDS) {
-                ctaContainer.style.display = 'block';
-            }
+            if (elapsed >= CTA_APPEAR_SECONDS) ctaContainer.style.display = 'block';
 
             requestAnimationFrame(syncVideoTime);
         }
 
-        // ループ処理開始
         syncVideoTime();
 
-        // 4. ユーザーが「音声ON」をタップした時の処理
         overlay.addEventListener('click', () => {
-            // カウントダウン中、または配信終了後は反応させない
-            if ((Date.now() - startTime) < 0) return;
-            if (videoDuration > 0 && ((Date.now() - startTime) / 1000) >= videoDuration) return;
-
+            const elapsed = (Date.now() - startTime) / 1000;
+            if (elapsed < 0) return;
+            if (videoDuration > 0 && elapsed >= videoDuration) return;
             isUserInteracted = true;
-            // Vimeoの音声をONにして再生
             player.setMuted(false);
             player.setVolume(1);
             player.play();
-            
             overlay.style.display = 'none';
+            viewerCountEl.textContent = `👁 ${VIEWER_COUNTS[0]}`;
         });
-
     </script>
 </body>
 </html>
