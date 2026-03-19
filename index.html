@@ -6,43 +6,45 @@
     <title>【限定公開】特別ご祈祷ライブ配信</title>
     <script src="https://player.vimeo.com/api/player.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+    <!-- 読みやすいゴシック体に変更 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold:        #c9a84c;
-            --gold-light:  #f0d080;
-            --gold-pale:   #f7ebb8;
-            --dark-bg:     #0a0806;
-            --dark-card:   #120f0a;
-            --dark-mid:    #1a1510;
-            --dark-border: #2a2218;
-            --text-main:   #ede0c4;
-            --text-muted:  #7a6a4e;
-            --red-live:    #e05555;
+            --bg-main:       #f5f5f5;
+            --bg-card:       #ffffff;
+            --border-color:  #dddddd;
+            --text-main:     #333333;
+            --text-muted:    #666666;
+            --accent-red:    #b71c1c; /* 落ち着いたえんじ色 */
+            --btn-color:     #e53935; /* CTAボタン用 */
+            --chat-self:     #e3f2fd;
+            --chat-self-txt: #0d47a1;
+            --chat-other:    #f1f1f1;
+            --chat-other-txt:#333333;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         html, body {
-            background: var(--dark-bg);
+            background: var(--bg-main);
             color: var(--text-main);
-            font-family: 'Noto Serif JP', serif;
+            font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
-            /* スマホで引っ張りすぎ防止 */
             overscroll-behavior-y: contain;
         }
 
         /* =============================
-           ヘッダー（コンパクト）
+           ヘッダー
         ============================= */
         .site-header {
             position: relative;
             z-index: 10;
             text-align: center;
-            padding: 18px 16px 14px;
-            border-bottom: 1px solid var(--dark-border);
-            background: linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
+            padding: 16px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .header-top {
@@ -50,83 +52,77 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .live-badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            background: rgba(224,85,85,0.12);
-            border: 1px solid rgba(224,85,85,0.4);
-            color: #f08080;
-            font-size: 10px;
-            letter-spacing: 0.18em;
-            padding: 3px 10px;
-            border-radius: 2px;
+            gap: 6px;
+            background: var(--accent-red);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 4px 8px;
+            border-radius: 4px;
             flex-shrink: 0;
         }
         .live-dot {
             width: 6px; height: 6px;
             border-radius: 50%;
-            background: var(--red-live);
-            animation: blink 1.2s ease-in-out infinite;
+            background: #ffffff;
+            animation: blink 2s ease-in-out infinite;
         }
         @keyframes blink {
-            0%,100% { opacity:1; } 50% { opacity:0.1; }
+            0%,100% { opacity:1; } 50% { opacity:0.3; }
         }
 
         .site-header h1 {
-            font-size: 15px;
-            font-weight: 300;
-            letter-spacing: 0.25em;
-            color: var(--gold-pale);
-            line-height: 1.6;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text-main);
+            line-height: 1.4;
         }
         .site-header h1 em {
             font-style: normal;
-            color: var(--gold-light);
-            font-weight: 500;
+            color: var(--accent-red);
         }
 
         /* =============================
            動画上の案内バナー
         ============================= */
         .info-banner {
-            background: linear-gradient(90deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06), rgba(201,168,76,0.12));
-            border-bottom: 1px solid rgba(201,168,76,0.2);
-            padding: 8px 16px;
+            background: #fff9e6; /* 薄い黄色で目立たせる */
+            border-bottom: 1px solid #ffe082;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-            font-size: 11px;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-main);
         }
         .info-banner .banner-title {
-            color: var(--gold);
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
+            color: var(--accent-red);
+            font-weight: 700;
         }
         .viewer-count {
-            font-size: 11px;
-            color: var(--gold);
-            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-size: 12px;
             white-space: nowrap;
         }
 
         /* =============================
-           動画エリア（全幅・スマホ最優先）
+           動画エリア
         ============================= */
         .video-wrap {
             position: relative;
             width: 100%;
             aspect-ratio: 16 / 9;
             background: #000;
-            /* 動画上にゴールドライン */
-            border-bottom: 2px solid rgba(201,168,76,0.25);
         }
 
         #vimeo-player {
@@ -135,184 +131,202 @@
             pointer-events: none;
         }
 
-        /* =============================
-           オーバーレイ
-        ============================= */
+        /* 申込通知（ポップアップ） */
+        .purchase-notification {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 25; /* overlayより下 */
+            pointer-events: none;
+            letter-spacing: 0.05em;
+        }
+        .purchase-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* オーバーレイ */
         #overlay {
             position: absolute; inset: 0;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            z-index: 20; cursor: pointer;
-            background: radial-gradient(ellipse at center, rgba(10,8,6,0.5) 0%, rgba(10,8,6,0.9) 100%);
-            backdrop-filter: blur(6px);
+            z-index: 30; cursor: pointer;
+            background: rgba(0, 0, 0, 0.7);
             padding: 16px;
-        }
-
-        .overlay-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-            opacity: 0.75;
         }
 
         #overlay-message {
             text-align: center;
-            color: var(--text-main);
-            font-size: 13px;
-            font-weight: 300;
-            letter-spacing: 0.18em;
-            line-height: 2;
-            margin-bottom: 20px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            line-height: 1.6;
+            margin-bottom: 24px;
         }
         #overlay-message .countdown-num {
             display: block;
-            font-family: 'Cinzel', serif;
-            font-size: clamp(26px, 8vw, 40px);
-            color: var(--gold-light);
-            letter-spacing: 0.06em;
-            margin-top: 8px;
-            line-height: 1.3;
+            font-size: clamp(24px, 7vw, 36px);
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 12px;
         }
         #overlay-message .countdown-num small {
-            font-family: 'Noto Serif JP', serif;
-            font-size: 0.42em;
-            letter-spacing: 0.15em;
-            opacity: 0.65;
+            font-size: 0.5em;
+            font-weight: 400;
+            margin: 0 4px;
         }
 
         #play-btn {
             display: none;
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold-light);
-            font-family: 'Noto Serif JP', serif;
-            font-size: 14px;
-            letter-spacing: 0.18em;
-            padding: 12px 32px;
-            border-radius: 2px;
+            background: rgba(229, 57, 53, 0.9);
+            border: none;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 14px 32px;
+            border-radius: 30px;
             cursor: pointer;
-            animation: pulseBtn 2s ease-in-out infinite;
-            transition: background 0.2s;
-            /* スマホでタップしやすく */
-            min-height: 48px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background 0.2s;
         }
-        #play-btn:active { background: rgba(201,168,76,0.15); }
-
-        @keyframes pulseBtn {
-            0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
-            50%      { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
-        }
+        #play-btn:active { transform: scale(0.96); background: #b71c1c; }
 
         /* =============================
            コンテンツ本体
         ============================= */
         .content-area {
-            padding: 0 0 80px; /* 下にCTAが固定されるので余白 */
+            padding: 0 0 100px; /* 下にCTAが固定されるので余白 */
         }
 
         /* =============================
-           チャット（コンパクト）
+           チャット
         ============================= */
         .chat-section {
-            background: var(--dark-card);
-            border-bottom: 1px solid var(--dark-border);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .chat-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 14px;
-            background: var(--dark-mid);
-            border-bottom: 1px solid var(--dark-border);
+            padding: 12px 16px;
+            background: #fafafa;
+            border-bottom: 1px solid var(--border-color);
         }
         .chat-header-title {
-            font-size: 10px;
-            letter-spacing: 0.25em;
-            color: var(--text-muted);
-            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
         }
 
         .chat-messages {
-            height: 200px; /* コンパクトに固定 */
+            height: 260px; /* 見やすく高さを確保 */
             overflow-y: auto;
-            padding: 10px 12px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            scrollbar-width: none; /* スマホでスクロールバー非表示 */
+            gap: 14px;
+            scrollbar-width: none;
         }
         .chat-messages::-webkit-scrollbar { display: none; }
 
-        .chat-message { animation: fadeUp 0.35s cubic-bezier(0.22,1,0.36,1); }
+        .chat-message { 
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            animation: fadeUp 0.3s ease-out; 
+        }
+        .chat-message.self-msg {
+            align-items: flex-end;
+        }
         @keyframes fadeUp {
             from { opacity:0; transform:translateY(8px); }
             to   { opacity:1; transform:translateY(0); }
         }
 
         .chat-name {
-            font-size: 10px;
-            letter-spacing: 0.1em;
+            font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 3px;
-            padding-left: 3px;
+            margin-bottom: 4px;
+            padding-left: 4px;
         }
-        .chat-name.self { color: var(--gold); }
+        .chat-message.self-msg .chat-name {
+            padding-left: 0;
+            padding-right: 4px;
+        }
 
         .chat-bubble {
-            background: var(--dark-mid);
-            border: 1px solid var(--dark-border);
-            padding: 7px 11px;
-            border-radius: 2px 10px 10px 10px;
-            font-size: 12px;
-            line-height: 1.6;
-            color: var(--text-main);
+            background: var(--chat-other);
+            color: var(--chat-other-txt);
+            padding: 10px 14px;
+            border-radius: 8px 8px 8px 0;
+            font-size: 14px;
+            line-height: 1.5;
             display: inline-block;
-            max-width: 90%;
+            max-width: 85%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .chat-bubble.self {
-            background: rgba(201,168,76,0.07);
-            border-color: rgba(201,168,76,0.2);
-            border-radius: 10px 2px 10px 10px;
-            color: var(--gold-pale);
+            background: var(--chat-self);
+            color: var(--chat-self-txt);
+            border-radius: 8px 8px 0 8px;
         }
 
         .chat-input-area {
             display: flex;
-            gap: 8px;
-            padding: 8px 12px 10px;
-            background: var(--dark-mid);
-            border-top: 1px solid var(--dark-border);
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
         }
         .chat-input-area input {
             flex: 1;
-            background: var(--dark-bg);
-            border: 1px solid var(--dark-border);
-            border-radius: 20px; /* スマホらしくピル型 */
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 20px;
             color: var(--text-main);
-            font-family: 'Noto Serif JP', serif;
-            font-size: 13px;
-            padding: 9px 14px;
-            outline: none;
-            transition: border-color 0.2s;
-            /* iOSのズーム防止 */
+            font-family: inherit;
+            /* iOSのズーム防止のため16px */
             font-size: 16px;
+            padding: 10px 16px;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
         }
-        .chat-input-area input:focus { border-color: rgba(201,168,76,0.4); }
-        .chat-input-area input::placeholder { color: var(--text-muted); font-size: 13px; }
-        .chat-input-area input:disabled { opacity: 0.35; }
+        .chat-input-area input:focus { 
+            border-color: var(--accent-red); 
+            background: #ffffff;
+        }
+        .chat-input-area input::placeholder { color: #999; font-size: 14px; }
+        .chat-input-area input:disabled { opacity: 0.5; }
 
         .send-btn {
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            border: none; color: #110a00;
-            font-family: 'Noto Serif JP', serif;
-            font-size: 13px; font-weight: 700;
+            background: var(--accent-red);
+            border: none; color: #ffffff;
+            font-family: inherit;
+            font-size: 14px; font-weight: 700;
             padding: 0 16px; border-radius: 20px;
             cursor: pointer; white-space: nowrap;
-            min-width: 56px; min-height: 42px;
+            min-width: 60px; min-height: 42px;
             transition: opacity 0.2s;
         }
-        .send-btn:active { opacity: 0.75; }
-        .send-btn:disabled { background: var(--dark-border); color: var(--text-muted); }
+        .send-btn:active { opacity: 0.8; }
+        .send-btn:disabled { background: #cccccc; color: #ffffff; }
 
         /* =============================
            CTA（画面下部に固定）
@@ -322,12 +336,14 @@
             position: fixed;
             bottom: 0; left: 0; right: 0;
             z-index: 100;
-            animation: ctaSlideUp 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
-            padding: 10px 14px 14px;
-            background: linear-gradient(0deg, rgba(10,8,6,0.98) 0%, rgba(10,8,6,0.9) 100%);
-            border-top: 1px solid rgba(201,168,76,0.25);
-            /* セーフエリア対応（iPhone） */
-            padding-bottom: calc(14px + env(safe-area-inset-bottom));
+            animation: ctaSlideUp 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+            padding: 12px 16px 16px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(4px);
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            /* セーフエリア対応 */
+            padding-bottom: calc(16px + env(safe-area-inset-bottom));
         }
 
         @keyframes ctaSlideUp {
@@ -337,40 +353,33 @@
 
         .cta-label {
             text-align: center;
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            color: var(--text-muted);
-            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 10px;
         }
-        .cta-label em { font-style: normal; color: #e08080; }
+        .cta-label em { font-style: normal; color: var(--accent-red); }
 
         .cta-btn {
-            display: block;
-            text-decoration: none;
-            width: 100%;
-            text-align: center;
-            background: linear-gradient(90deg, #9a7020, var(--gold-light), var(--gold), var(--gold-light), #9a7020);
-            background-size: 300% 100%;
-            color: #0f0900;
-            font-family: 'Noto Serif JP', serif;
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            padding: 16px 20px;
-            border-radius: 4px;
-            box-shadow: 0 4px 20px rgba(201,168,76,0.3);
-            animation: goldFlow 3.5s ease-in-out infinite;
-            /* タップ領域確保 */
-            min-height: 54px;
             display: flex;
             align-items: center;
             justify-content: center;
+            text-decoration: none;
+            width: 100%;
+            background: var(--btn-color);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 0 #b71c1c;
+            transition: transform 0.1s, box-shadow 0.1s;
         }
-        @keyframes goldFlow {
-            0%,100% { background-position: 0% 50%; }
-            50%      { background-position: 100% 50%; }
+        .cta-btn:active { 
+            transform: translateY(4px); 
+            box-shadow: 0 0 0 #b71c1c; 
         }
-        .cta-btn:active { opacity: 0.85; transform: scale(0.99); }
 
         /* =============================
            名前入力モーダル
@@ -383,147 +392,132 @@
             align-items: center;
             justify-content: center;
             padding: 24px;
-            background: radial-gradient(ellipse at center, rgba(10,8,6,0.7) 0%, rgba(10,8,6,0.97) 100%);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.6);
         }
 
         .name-modal-inner {
             width: 100%;
             max-width: 360px;
-            background: var(--dark-card);
-            border: 1px solid rgba(201,168,76,0.25);
-            border-radius: 6px;
-            padding: 36px 28px 32px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 32px 24px;
             text-align: center;
             position: relative;
-            animation: modalIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: modalIn 0.4s ease-out forwards;
         }
 
         @keyframes modalIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.97); }
-            to   { opacity: 1; transform: translateY(0)    scale(1); }
-        }
-
-        /* 上部ゴールドライン */
-        .name-modal-inner::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(to right, transparent, var(--gold), transparent);
-            border-radius: 6px 6px 0 0;
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .modal-icon {
             font-size: 36px;
-            margin-bottom: 14px;
-            animation: shimmer 3s ease-in-out infinite;
+            margin-bottom: 12px;
         }
 
         .modal-title {
-            font-size: 11px;
-            letter-spacing: 0.3em;
-            color: var(--gold);
-            text-transform: uppercase;
-            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin-bottom: 8px;
         }
 
         .modal-lead {
-            font-size: 16px;
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            color: var(--gold-pale);
-            line-height: 1.8;
-            margin-bottom: 6px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
         }
 
         .modal-sub {
-            font-size: 11px;
+            font-size: 13px;
             color: var(--text-muted);
-            letter-spacing: 0.1em;
             margin-bottom: 24px;
-            line-height: 1.8;
+            line-height: 1.6;
         }
 
         #name-input {
             width: 100%;
-            background: var(--dark-bg);
-            border: 1px solid var(--dark-border);
-            border-radius: 4px;
+            background: #f9f9f9;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
             color: var(--text-main);
-            font-family: 'Noto Serif JP', serif;
+            font-family: inherit;
             font-size: 16px; /* iOSズーム防止 */
-            padding: 13px 16px;
+            padding: 14px 16px;
             outline: none;
             text-align: center;
-            letter-spacing: 0.2em;
-            transition: border-color 0.2s;
-            margin-bottom: 14px;
+            transition: border-color 0.2s, background 0.2s;
+            margin-bottom: 16px;
         }
-        #name-input:focus { border-color: rgba(201,168,76,0.5); }
-        #name-input::placeholder { color: var(--text-muted); font-size: 13px; letter-spacing: 0.1em; }
+        #name-input:focus { 
+            border-color: var(--accent-red); 
+            background: #ffffff;
+        }
+        #name-input::placeholder { color: #aaaaaa; font-size: 14px; }
 
         #name-submit {
             width: 100%;
-            background: linear-gradient(90deg, #9a7020, var(--gold-light), var(--gold), var(--gold-light), #9a7020);
-            background-size: 300% 100%;
+            background: var(--btn-color);
             border: none;
-            color: #0f0900;
-            font-family: 'Noto Serif JP', serif;
-            font-size: 15px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 16px;
             font-weight: 700;
-            letter-spacing: 0.2em;
-            padding: 14px;
-            border-radius: 4px;
+            padding: 16px;
+            border-radius: 6px;
             cursor: pointer;
-            min-height: 52px;
-            animation: goldFlow 3.5s ease-in-out infinite;
-            transition: opacity 0.2s;
+            box-shadow: 0 4px 0 #b71c1c;
+            transition: transform 0.1s, box-shadow 0.1s;
         }
-        #name-submit:active { opacity: 0.8; }
+        #name-submit:active { 
+            transform: translateY(4px); 
+            box-shadow: 0 0 0 #b71c1c; 
+        }
 
         .modal-note {
-            margin-top: 14px;
-            font-size: 10px;
+            margin-top: 16px;
+            font-size: 11px;
             color: var(--text-muted);
-            letter-spacing: 0.08em;
-            line-height: 1.8;
         }
 
         /* =============================
            PC時のレイアウト調整
         ============================= */
         @media (min-width: 700px) {
-            .site-header { padding: 28px 24px 20px; }
-            .site-header h1 { font-size: 20px; }
+            .site-header { padding: 24px; }
+            .site-header h1 { font-size: 22px; }
 
             .page-body {
-                max-width: 600px;
+                max-width: 640px;
                 margin: 0 auto;
+                background: #ffffff;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             }
 
-            .chat-messages { height: 240px; }
+            .chat-messages { height: 300px; }
 
             #cta-container {
                 position: static;
                 animation: ctaReveal 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
-                padding: 20px 0 0;
+                padding: 24px 0 0;
                 background: transparent;
                 border-top: none;
+                box-shadow: none;
             }
             @keyframes ctaReveal {
                 from { opacity:0; transform:translateY(20px); }
                 to   { opacity:1; transform:translateY(0); }
             }
             .cta-btn {
-                max-width: 600px;
+                max-width: 640px;
                 margin: 0 auto;
-                border-radius: 4px;
                 font-size: 20px;
                 padding: 20px;
             }
-            .cta-label { padding: 0; }
 
-            /* PC時はコンテンツに下余白不要 */
             .content-area { padding-bottom: 40px; }
         }
     </style>
@@ -533,12 +527,12 @@
     <!-- 名前入力モーダル -->
     <div id="name-modal">
         <div class="name-modal-inner">
-            <div class="modal-icon">🪷</div>
+            <div class="modal-icon">🌸</div>
             <p class="modal-title">Welcome</p>
             <p class="modal-lead">お名前を入力してください</p>
             <p class="modal-sub">チャットに表示されるお名前です。<br>ニックネームでも構いません。</p>
             <input type="text" id="name-input" placeholder="例）山田　/ ハナコ" maxlength="20" autocomplete="off">
-            <button id="name-submit">✦ &nbsp; ライブ配信に参加する &nbsp; ✦</button>
+            <button id="name-submit">ライブ配信に参加する</button>
             <p class="modal-note">※ 入力した名前はこのページのみで使用されます</p>
         </div>
     </div>
@@ -558,8 +552,8 @@
 
         <!-- 動画上の案内バナー -->
         <div class="info-banner">
-            <span class="banner-title">✦ 本日の特別ご祈祷</span>
-            <span class="viewer-count" id="viewer-count">👁 ―</span>
+            <span class="banner-title">本日の特別ご祈祷</span>
+            <span class="viewer-count" id="viewer-count">👁 ― 人が視聴中</span>
         </div>
 
         <!-- 動画 -->
@@ -574,8 +568,10 @@
                 allowfullscreen>
             </iframe>
 
+            <!-- ★ 新機能：申込通知ポップアップ -->
+            <div id="purchase-notification" class="purchase-notification"></div>
+
             <div id="overlay">
-                <div class="overlay-icon">🪷</div>
                 <div id="overlay-message"></div>
                 <button id="play-btn">🔊 タップして音声をONにする</button>
             </div>
@@ -587,8 +583,8 @@
             <!-- チャット -->
             <div class="chat-section">
                 <div class="chat-header">
-                    <span class="chat-header-title">💬 Live Chat</span>
-                    <span style="font-size:10px;color:var(--text-muted);letter-spacing:0.05em;" id="chat-status">配信開始後に参加できます</span>
+                    <span class="chat-header-title">💬 ライブチャット</span>
+                    <span style="font-size:11px;color:var(--text-muted);" id="chat-status">配信開始後に参加できます</span>
                 </div>
                 <div class="chat-messages" id="chat-messages"></div>
                 <div class="chat-input-area">
@@ -603,34 +599,27 @@
 
     <!-- CTA（固定フッター） -->
     <div id="cta-container">
-        <div class="cta-label">✦ 限定枠 ・ <em>定員に達し次第終了</em> ✦</div>
+        <div class="cta-label">＼ 限定枠 ・ <em>定員に達し次第終了</em> ／</div>
         <!-- 【本番用】href を決済ページURLに差し替えてください -->
-        <a href="#" class="cta-btn">✨ &nbsp; 今すぐお申し込みはこちら &nbsp; ✨</a>
+        <a href="#" class="cta-btn">今すぐお申し込みはこちら</a>
     </div>
 
     <script>
         /* ============================================================
-         * ★★★★★ ここだけ変えればOK！！★★★★★
-         * ------------------------------------------------------------
-         *  START_HOUR   … 配信開始「時」（24時間表記）
-         *  START_MINUTE … 配信開始「分」
-         *
-         *  例) 夜9時00分スタート → START_HOUR = 21, START_MINUTE = 0
-         *  例) 夜8時30分スタート → START_HOUR = 20, START_MINUTE = 30
+         * 配信開始時間の設定
          * ============================================================ */
         const START_HOUR   = 21;   // ← ここを変える（0〜23）
-        const START_MINUTE = 34;    // ← ここを変える（0〜59）
-        /* ============================================================ */
+        const START_MINUTE = 34;   // ← ここを変える（0〜59）
 
         const CTA_APPEAR_SECONDS = 120; // 購入ボタンが出るまでの秒数（2分=120）
 
-        // VimeoのURL（開始時刻になって初めてセットする）
+        // VimeoのURL
         const VIMEO_SRC = 'https://player.vimeo.com/video/1168468796?h=ab28f6c45f&autoplay=1&muted=1&controls=0';
 
-        const VIEWER_COUNTS = [127,143,158,172,189,201,217,224,238,251,263,271,248,239,255];
+        const VIEWER_COUNTS =[127,143,158,172,189,201,217,224,238,251,263,271,248,239,255];
         let viewerIdx = 0;
 
-        const chatData = [
+        const chatData =[
             { time: 5,   name: "山田",   text: "こんばんは！よろしくお願いします🙏" },
             { time: 15,  name: "Y.K",    text: "音声ばっちりです！画面からすごいエネルギーを感じます✨" },
             { time: 30,  name: "恵子",   text: "先生、今日も楽しみに待っていました！" },
@@ -647,6 +636,12 @@
             { time: 230, name: "洋子",   text: "先生、今日も素晴らしい時間をありがとうございました！" }
         ];
 
+        // 申込通知用のダミーデータ
+        const notifyRegions =["東京都", "大阪府", "愛知県", "福岡県", "北海道", "神奈川県", "埼玉県", "千葉県", "兵庫県", "静岡県"];
+        const notifyAttrs =["40代女性", "50代女性", "40代男性", "50代男性", "60代女性", "30代女性"];
+        let isNotifying = false;
+        let lastNotifyTime = 0;
+
         // DOM
         const iframeEl      = document.getElementById('vimeo-player');
         const overlay       = document.getElementById('overlay');
@@ -658,18 +653,19 @@
         const chatSubmitBtn = document.getElementById('chat-submit');
         const viewerCountEl = document.getElementById('viewer-count');
         const chatStatus    = document.getElementById('chat-status');
+        const notifyEl      = document.getElementById('purchase-notification');
 
         // 名前モーダル
         const nameModal     = document.getElementById('name-modal');
         const nameInput     = document.getElementById('name-input');
         const nameSubmitBtn = document.getElementById('name-submit');
 
-        let userName = 'あなた'; // デフォルト（モーダルで上書きされる）
+        let userName = 'あなた'; 
 
         function submitName() {
             const val = nameInput.value.trim();
             if (!val) {
-                nameInput.style.borderColor = 'rgba(224,85,85,0.6)';
+                nameInput.style.borderColor = '#e53935';
                 nameInput.placeholder = '名前を入力してください';
                 nameInput.focus();
                 return;
@@ -679,14 +675,12 @@
             setTimeout(() => nameModal.style.display = 'none', 300);
         }
 
-        // モーダルのアニメーション（閉じる）
         const modalStyle = document.createElement('style');
-        modalStyle.textContent = `@keyframes modalOut { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(0.96)} }`;
+        modalStyle.textContent = `@keyframes modalOut { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(-10px)} }`;
         document.head.appendChild(modalStyle);
 
         nameSubmitBtn.addEventListener('click', submitName);
         nameInput.addEventListener('keypress', e => { if (e.key === 'Enter') submitName(); });
-        // 入力したら赤枠リセット
         nameInput.addEventListener('input', () => nameInput.style.borderColor = '');
 
         let player           = null;
@@ -697,7 +691,6 @@
         let currentVideoTime = 0;
         let isSeeking        = false;
 
-        // 開始時刻になって初めてiframeにsrcをセットしPlayerを起動
         function initPlayer() {
             if (playerReady) return;
             playerReady = true;
@@ -719,11 +712,12 @@
             return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
 
+        // 自他のクラスを振り分け、LINE風に左右に寄せる
         function appendChat(name, text, isSelf) {
             const el = document.createElement('div');
-            el.className = 'chat-message';
+            el.className = `chat-message ${isSelf ? 'self-msg' : ''}`;
             el.innerHTML = `
-                <div class="chat-name ${isSelf?'self':''}">${escHtml(name)}</div>
+                <div class="chat-name">${escHtml(name)}</div>
                 <div class="chat-bubble ${isSelf?'self':''}">${escHtml(text)}</div>`;
             chatContainer.appendChild(el);
             chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -749,28 +743,63 @@
         chatSubmitBtn.addEventListener('click', sendMyChat);
         chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMyChat(); });
 
-        // 視聴者数演出
         setInterval(() => {
             if (isUserInteracted) {
                 const base = VIEWER_COUNTS[viewerIdx % VIEWER_COUNTS.length];
-                viewerCountEl.textContent = `👁 ${base + Math.floor(Math.random()*9)-4}`;
+                viewerCountEl.textContent = `👁 ${base + Math.floor(Math.random()*9)-4} 人が視聴中`;
                 viewerIdx++;
             }
         }, 9000);
+
+        // ★ 新機能：申込通知の表示ロジック
+        function handleNotification(elapsed) {
+            // CTAボタンが表示されてから発動
+            if (elapsed < CTA_APPEAR_SECONDS) return;
+            
+            if (Math.floor(elapsed) > lastNotifyTime) {
+                lastNotifyTime = Math.floor(elapsed);
+                
+                // 10%の確率で通知（現在表示中でない場合のみ）
+                if (!isNotifying && Math.random() < 0.1) {
+                    isNotifying = true;
+                    
+                    // 30%の確率でシンプルなテキストにする
+                    const isSimple = Math.random() < 0.3;
+                    let text = "";
+                    if (isSimple) {
+                        text = "1名が申し込みました！";
+                    } else {
+                        const region = notifyRegions[Math.floor(Math.random() * notifyRegions.length)];
+                        const attr = notifyAttrs[Math.floor(Math.random() * notifyAttrs.length)];
+                        text = `${region}の${attr}が申し込みました`;
+                    }
+                    
+                    notifyEl.innerHTML = `<span style="color:#ffeb3b; font-size:16px; margin-right:6px;">🔔</span> ${text}`;
+                    notifyEl.classList.add('show');
+                    
+                    // 4秒後に消す
+                    setTimeout(() => {
+                        notifyEl.classList.remove('show');
+                        // 次の通知まで最低4秒空ける
+                        setTimeout(() => { isNotifying = false; }, 4000);
+                    }, 4000);
+                }
+            }
+        }
 
         function syncVideoTime() {
             const now     = Date.now();
             const elapsed = (now - startTime) / 1000;
 
-            // ── 開始前（カウントダウン） ──
+            // ── 開始前 ──
             if (elapsed < 0) {
                 const remain = Math.abs(Math.floor(elapsed));
                 const h = Math.floor(remain / 3600);
                 const m = Math.floor((remain % 3600) / 60);
                 const s = remain % 60;
                 const tStr = h > 0
-                    ? `${h}<small>時間</small> ${String(m).padStart(2,'0')}<small>分</small> ${String(s).padStart(2,'0')}<small>秒</small>`
-                    : `${String(m).padStart(2,'0')}<small>分</small> ${String(s).padStart(2,'0')}<small>秒</small>`;
+                    ? `${h}<small>時間</small>${String(m).padStart(2,'0')}<small>分</small>${String(s).padStart(2,'0')}<small>秒</small>`
+                    : `${String(m).padStart(2,'0')}<small>分</small>${String(s).padStart(2,'0')}<small>秒</small>`;
 
                 overlay.style.display = 'flex';
                 overlayMsg.innerHTML  = `配信開始までお待ちください<span class="countdown-num">${tStr}</span>`;
@@ -781,14 +810,13 @@
                 return;
             }
 
-            // ── 開始時刻になったらPlayerを起動 ──
             initPlayer();
 
             // ── 配信終了後 ──
             if (videoDuration > 0 && elapsed >= videoDuration) {
                 if (player) player.pause();
                 overlay.style.display = 'flex';
-                overlayMsg.innerHTML  = '本日のご祈祷配信は終了いたしました。<br><small style="opacity:0.5;font-size:0.85em;letter-spacing:0.1em;">またのご縁をお待ちしております。</small>';
+                overlayMsg.innerHTML  = '本日のご祈祷配信は終了いたしました。<br><small style="opacity:0.8;font-size:0.85em;margin-top:8px;display:block;">またのご縁をお待ちしております。</small>';
                 playBtn.style.display = 'none';
                 chatInput.disabled = chatSubmitBtn.disabled = true;
                 return;
@@ -805,7 +833,6 @@
                 chatStatus.textContent = 'チャットに参加中';
             }
 
-            // 時間同期
             if (player && !isSeeking && Math.abs(currentVideoTime - Math.max(0, elapsed)) > 2.0) {
                 isSeeking = true;
                 player.setCurrentTime(Math.max(0, elapsed))
@@ -817,12 +844,15 @@
 
             if (elapsed >= CTA_APPEAR_SECONDS) ctaContainer.style.display = 'block';
 
+            // 通知処理の実行
+            handleNotification(elapsed);
+
             requestAnimationFrame(syncVideoTime);
         }
 
         syncVideoTime();
 
-        // 音声ON タップ
+        // 音声ON
         overlay.addEventListener('click', () => {
             const elapsed = (Date.now() - startTime) / 1000;
             if (elapsed < 0) return;
@@ -834,7 +864,7 @@
             player.setVolume(1);
             player.play();
             overlay.style.display = 'none';
-            viewerCountEl.textContent = `👁 ${VIEWER_COUNTS[0]}`;
+            viewerCountEl.textContent = `👁 ${VIEWER_COUNTS[0]} 人が視聴中`;
         });
     </script>
 </body>
